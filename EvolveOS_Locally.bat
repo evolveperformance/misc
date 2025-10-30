@@ -54,6 +54,15 @@ if not exist "C:\Windows\Evolve" (
 echo Evolve folder extracted successfully.
 del "%Evolve_ZIP%" >nul 2>&1
 
+@echo Create Desktop Shortcut to Evolve Folder
+powershell -Command ^
+"$shell = New-Object -ComObject WScript.Shell; ^
+$shortcut = $shell.CreateShortcut('%USERPROFILE%\Desktop\Evolve.lnk'); ^
+$shortcut.TargetPath = 'C:\Windows\Evolve'; ^
+$shortcut.IconLocation = 'C:\Windows\System32\imageres.dll,3'; ^
+$shortcut.Save()"
+
+
 echo Downloading latest Evolve configuration...
 set "Evolve_BAT=%TEMP%\EvolveOS_Online.bat"
 curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS.bat" -o "%Evolve_BAT%"
