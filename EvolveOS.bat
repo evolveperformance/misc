@@ -429,8 +429,12 @@ powercfg -delete 3af9b8d9-7c97-431d-ad78-34a8bfea439f>nul 2>&1
 powercfg -delete ded574b5-45a0-4f42-8737-46345c09c238>nul 2>&1
 powercfg -delete a1841308-3541-4fab-bc81-f71556f20b4a>nul 2>&1
 powercfg -delete e9a42b02-d5df-448d-aa00-03f14749eb61>nul 2>&1
-powercfg -import C:\Windows\Misc\EvolveOS.pow 69696969-6969-6969-6969-696969696969
-del /f /q "C:\Windows\Misc\EvolveOS.pow" >nul 2>&1
+
+
+@echo Download and Import Power Plan
+curl -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS.pow" -o "%TEMP%\EvolveOS.pow" >nul 2>&1
+powercfg -import "%TEMP%\EvolveOS.pow" 69696969-6969-6969-6969-696969696969
+del /f /q "%TEMP%\EvolveOS.pow" >nul 2>&1
 
 @echo Configure Context Menu
 reg add "HKCR\.bat\ShellNew" /v NullFile /t REG_SZ /d "" /f >nul 2>&1

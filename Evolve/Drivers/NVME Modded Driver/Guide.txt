@@ -1,0 +1,8 @@
+FACEIT MAY NOT WORK WITH THIS DRIVER!
+
+1. Import Certificate
+2. Go to Device Manager
+3. Press Add Driver
+4. Paste Path of this folder (C:\Users\Administrator\Desktop\NovaOS\Drivers\NVME Modded Driver)
+5. Next, Close
+6. Go to MSI Mode Util and Put Undefined Priority

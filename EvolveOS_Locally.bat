@@ -1,5 +1,5 @@
 @echo off
-title Ultron OS Setup
+title Evolve OS Setup
 
 :checkInternet
 echo Checking internet connection...
@@ -11,22 +11,22 @@ if errorlevel 1 (
 )
 
 echo Internet connection detected.
-echo Downloading latest Ultron configuration...
+echo Downloading latest Evolve configuration...
 
-set "ULTRON_BAT=%TEMP%\UltronOS_Online.bat"
-curl.exe -L "https://gitlab.cs.hs-rm.de/lstru001/misc/-/raw/main/UltronOS.bat" -o "%ULTRON_BAT%"
+set "Evolve_BAT=%TEMP%\EvolveOS_Online.bat"
+curl.exe -L "https://github.com/evolveperformance/misc/blob/main/EvolveOS.bat" -o "%Evolve_BAT%"
 
-if not exist "%ULTRON_BAT%" (
+if not exist "%Evolve_BAT%" (
     echo [!] Download failed. Exiting.
     exit /b
 )
 
-echo Running Ultron setup...
-call "%ULTRON_BAT%"
+echo Running Evolve setup...
+call "%Evolve_BAT%"
 
 echo.
 echo Cleaning up temporary files...
-del "%ULTRON_BAT%" >nul 2>&1
+del "%Evolve_BAT%" >nul 2>&1
 
 echo.
 echo Restarting system to apply changes...
