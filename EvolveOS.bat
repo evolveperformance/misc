@@ -1140,6 +1140,25 @@ reg add "HKCU\Software\Sysinternals\AutoRuns" /v SubmitUnknownImages /t REG_DWOR
 reg add "HKCU\Software\Sysinternals\AutoRuns" /v Theme /t REG_SZ /d "DarkTheme" /f >nul 2>&1
 reg add "HKCU\Software\Sysinternals\AutoRuns" /v VerifyCodeSignatures /t REG_DWORD /d 1 /f >nul 2>&1
 
+@echo Disable Windows Store Auto Download
+reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsStore" /v "AutoDownload" /t REG_DWORD /d "2" /f >nul 2>&1
+
+@echo Exclude Driver Updates in Quality Updates
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ExcludeWUDriversInQualityUpdate" /t REG_DWORD /d "1" /f >nul 2>&1
+
+@echo Prevent Device Metadata From Network
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" /v "PreventDeviceMetadataFromNetwork" /t REG_DWORD /d "1" /f >nul 2>&1
+
+@echo Configure Windows Update Options
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d "2" /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d "1" /f >nul 2>&1
+
+@echo Disable Delivery Optimization
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" /v "DODownloadMode" /t REG_DWORD /d "0" /f >nul 2>&1
+
+@echo Disable Driver Search from Windows Update
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching" /v "SearchOrderConfig" /t REG_DWORD /d "0" /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching" /v "DontSearchWindowsUpdate" /t REG_DWORD /d "1" /f >nul 2>&1
 
 @echo Edge
 reg add "HKLM\Software\Policies\Microsoft\Windows\EdgeUI" /v "DisableMFUTracking" /t REG_DWORD /d "1" /f >nul 2>&1
