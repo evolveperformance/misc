@@ -44,7 +44,7 @@ if not exist "%Evolve_ZIP%" (
 )
 
 echo Extracting Evolve folder to C:\Windows\...
-powershell -Command "Expand-Archive -Path '%Evolve_ZIP%' -DestinationPath 'C:\Windows\' -Force"
+powershell -Command "Expand-Archive -Path '%Evolve_ZIP%' -DestinationPath '%TEMP%\evolve_temp' -Force; Move-Item -Path '%TEMP%\evolve_temp\Evolve-main' -Destination 'C:\Windows\Evolve' -Force; Remove-Item '%TEMP%\evolve_temp' -Recurse -Force"
 
 if not exist "C:\Windows\Evolve" (
     echo [!] Extraction failed. Exiting.
