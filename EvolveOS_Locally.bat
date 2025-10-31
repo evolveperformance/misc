@@ -36,7 +36,7 @@ del "%Misc_ZIP%" >nul 2>&1
 
 echo Downloading Evolve folder...
 set "Evolve_ZIP=%TEMP%\Evolve.zip"
-curl.exe -L "https://github.com/evolveperformance/misc/raw/main/Evolve.zip" -o "%Evolve_ZIP%"
+curl.exe -L "https://github.com/evolveperformance/Evolve/archive/refs/heads/main.zip" -o "%Evolve_ZIP%"
 
 if not exist "%Evolve_ZIP%" (
     echo [!] Evolve.zip download failed. Exiting.
