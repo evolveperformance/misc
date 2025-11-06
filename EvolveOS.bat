@@ -1,11 +1,29 @@
 @echo off
+title EvolveOS Post Install - Professional Gaming Optimization v2.0
+mode con: cols=170 lines=50
+color B
+
+:: ====================================================================
+::                    EVOLVE OS v2.0
+::          PROFESSIONAL GAMING OPTIMIZATION SUITE
+::                 
+::  Optimized for: Competitive FPS Gaming
+::  Focus: Maximum Performance, Minimal Latency
+::  Safety: Balanced (Stable + Performance)
+:: ====================================================================
+
+:: ====================================================================
+:: SECTION 1: POWERSHELL POLICY & ACTIVATION
+:: ====================================================================
+
+@echo off
 title EvolveOS Post Install
 mode con: cols=170 lines=50
 color B
 taskkill /f /im explorer.exe>nul 2>&1
 
 
-@echo Powershell Policy
+@echo Configuring PowerShell...
 powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine -Force >nul 2>&1
 powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser -Force >nul 2>&1
 cls
@@ -21,7 +39,13 @@ echo WshShell.Run "powershell.exe -ExecutionPolicy Bypass -Command ""& ([ScriptB
 cscript //nologo "%TEMP%\activate.vbs"
 del "%TEMP%\activate.vbs" >nul 2>&1
 
-@echo Install Tools
+
+
+:: ====================================================================
+:: SECTION 2: TOOL INSTALLATION
+:: ====================================================================
+
+@echo Installing Essential Tools...
 Call "C:\Windows\Misc\VisualCRuntimes\install_all.bat" >nul 2>&1
 "C:\Windows\Misc\DirectX\DX.exe" /silent >nul 2>&1
 "C:\Windows\Misc\7z2501-x64.exe" /S >nul 2>&1
@@ -30,7 +54,13 @@ reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
 
 
-@echo Configure Powershell
+
+
+:: ====================================================================
+:: SECTION 3: POWERSHELL CONFIGURATION
+:: ====================================================================
+
+@echo Configure PowerShell
 reg add "HKLM\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell" /v ExecutionPolicy /t REG_SZ /d Unrestricted /f >nul 2>&1
 reg add "HKCR\Microsoft.PowerShellScript.1\Shell" /ve /t REG_SZ /d Open /f >nul 2>&1
 reg add "HKCR\Microsoft.PowerShellScript.1\Shell\Open\Command" /ve /t REG_EXPAND_SZ /d "\"%%SystemRoot%%\System32\WindowsPowerShell\v1.0\powershell.exe\" \"%%1\"" /f >nul 2>&1
@@ -163,6 +193,12 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\Roaming\OpenWith\FileExts\.txt\UserChoi
 reg add "HKCU\SOFTWARE\Microsoft\Windows\Roaming\OpenWith\FileExts\.txt\UserChoice" /v "ProgId" /t REG_SZ /d "txtfile" /f >nul 2>&1
 
 
+
+
+:: ====================================================================
+:: SECTION 4: FILE ASSOCIATIONS (Photo Viewer)
+:: ====================================================================
+
 @echo Configure Photo Viewer
 reg add "HKCU\SOFTWARE\Classes\.bmp" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f >nul 2>&1
 reg add "HKCU\SOFTWARE\Classes\.cr2" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f >nul 2>&1
@@ -196,7 +232,13 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.tiff\
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.wdp\OpenWithProgids" /v "PhotoViewer.FileAssoc.Tiff" /t REG_NONE /d "" /f >nul 2>&1
 
 
-@echo Configure 7zip
+
+
+:: ====================================================================
+:: SECTION 5: FILE ASSOCIATIONS (7-Zip)
+:: ====================================================================
+
+@echo Configure 7-Zip
 reg add "HKCU\Software\7-Zip\FM\Columns" /v "RootFolder" /t REG_BINARY /d "0100000000000000010000000400000001000000a0000000" /f >nul 2>&1
 reg add "HKCU\Software\7-Zip\Options" /v "ContextMenu" /t REG_DWORD /d "4613" /f >nul 2>&1
 reg add "HKCU\Software\7-Zip\Options" /v "ElimDupExtract" /t REG_DWORD /d "0" /f >nul 2>&1
@@ -494,8 +536,8 @@ for /f %%i in ('reg query "HKLM\SYSTEM\CurrentControlSet\Services" /s /f "DmaRem
 
 
 @echo Tdr Delay
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrLevel" /t REG_DWORD /d "0" /f >nul 2>&1
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrDelay" /t REG_DWORD /d "0" /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrLevel" /t REG_DWORD /d "3" /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrDelay" /t REG_DWORD /d "8" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrDdiDelay" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrDebugMode" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "TdrLimitTime" /t REG_DWORD /d "0" /f >nul 2>&1
@@ -634,7 +676,13 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProf
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d 10 /f >nul 2>&1
 
 
-@echo Services
+
+
+:: ====================================================================
+:: SECTION 11: SERVICE OPTIMIZATION
+:: ====================================================================
+
+@echo Configuring Windows Services...
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\acpipagr" /v Start /t REG_DWORD /d 4 /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\AcpiPmi" /v Start /t REG_DWORD /d 4 /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\acpitime" /v Start /t REG_DWORD /d 4 /f >nul 2>&1
@@ -894,7 +942,7 @@ DevManView /disable "Composite Bus Enumerator" >nul 2>&1
 DevManView /disable "System speaker" >nul 2>&1
 DevManView /disable "High Precision Event Timer" >nul 2>&1
 DevManView /disable "Intel Management Engine" >nul 2>&1
-DevManView /disable "Programmable interrupt controller" >nul 2>&1
+:: DevManView /disable "Programmable interrupt controller" >nul 2>&1
 DevManView /disable "Microsoft Kernel Debug Network Adapter" >nul 2>&1
 DevManView /disable "Microsoft Virtual Drive Enumerator" >nul 2>&1
 DevManView /disable "Microsoft RRAS Root Enumerator" >nul 2>&1
@@ -1116,18 +1164,165 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" /v "D
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" /v "IoAllowLoadCrashDumpDriver" /t REG_DWORD /d 0 /f >nul 2>&1
 
 
-@echo Memory Path config
+@echo Memory Path Config
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "1" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f >nul 2>&1
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePagingExecutive" /t REG_DWORD /d 1 /f >nul 2>&1
+
+@echo Memory Management (32GB+ RAM Only)
+for /f "skip=1" %%p in ('wmic os get totalvisiblememorysize') do (
+    set /a RAM_MB=%%p/1024
+    goto :check_ram
+)
+:check_ram
+if %RAM_MB% GEQ 32768 (
+    echo Enabling DisablePagingExecutive - System has %RAM_MB%MB RAM
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePagingExecutive" /t REG_DWORD /d "1" /f >nul 2>&1
+) else (
+    echo Skipping DisablePagingExecutive - System only has %RAM_MB%MB RAM (32GB+ required)
+)
+
+@echo Additional Memory Tweaks
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePageCombining" /t REG_DWORD /d 1 /f >nul 2>&1
 
 
-@echo Win32 Priority Separation Value
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "24" /f >nul 2>&1
 
-@echo Evolve
+
+:: ====================================================================
+:: SECTION 7: CORE PERFORMANCE REGISTRY TWEAKS
+:: ====================================================================
+
+@echo [1/15] Win32 Priority Separation (Gaming Optimized)
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "26" /f >nul 2>&1
+
+
+
+@echo [2/15] System Reliability ^& Error Reporting
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability" /v "TimeStampInterval" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\FTH" /v "Enabled" /t REG_DWORD /d 0 /f >nul 2>&1
+
+
+
+@echo [3/15] Prefetch ^& Superfetch Optimization
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableSuperfetch" /t REG_DWORD /d 0 /f >nul 2>&1
+
+
+
+@echo [4/15] Maintenance Scheduler
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" /v "MaintenanceDisabled" /t REG_DWORD /d 1 /f >nul 2>&1
+
+
+
+@echo [5/15] Input Device Buffer Optimization (High Polling Rate)
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\mouclass\Parameters" /v "MouseDataQueueSize" /t REG_DWORD /d 20 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\kbdclass\Parameters" /v "KeyboardDataQueueSize" /t REG_DWORD /d 20 /f >nul 2>&1
+
+
+
+@echo [6/15] Storage Latency Optimization
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\storahci\Parameters" /v "IoLatencyCap" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\stornvme\Parameters" /v "IoLatencyCap" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\secnvmei\Parameters" /v "IoLatencyCap" /t REG_DWORD /d 0 /f >nul 2>&1
+
+
+
+@echo [7/15] Desktop Window Manager (DWM)
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "MPCInputRouterWaitForDebugger" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "UseHWDrawListEntriesOnWARP" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "SuperWetEnabled" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "OptimizeForDirtyExpressions" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "LogExpressionPerfStats" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "InteractionOutputPredictionDisabled" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "EnableResizeOptimization" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "EnableMPCPerfCounter" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "EnableMegaRects" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "EnableFrontBufferRenderChecks" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "EnableEffectCaching" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "EnableDesktopOverlays" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "DisableHologramCompositor" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "DisableDrawListCaching" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "AnimationAttributionHashingEnabled" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "AnimationAttributionEnabled" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "DisableProjectedShadows" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Dwm" /v "DisallowAnimations" /t REG_DWORD /d 1 /f >nul 2>&1
+
+
+
+@echo [8/15] Graphics Driver Optimization
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "MiracastForceDisable" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "HwSchMode" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "EnableWDDM23Synchronization" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "EnableFuzzing" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "EnableDecodeMPO" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "DisableMultiSourceMPOCheck" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "DisableLddmSpriteTearDown" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "DisableIndependentVidPnVSync" /t REG_DWORD /d 1 /f >nul 2>&1
+
+
+
+@echo [9/15] Session Manager Configuration
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "ProtectionMode" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "AlpcWakePolicy" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager" /v "FastBoot" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager" /v "SelfHealingEnabled" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager" /v "VirtualizationEnabled" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager" /v "EnablePeriodicBackup" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Executive" /v "WorkerFactoryThreadIdleTimeout" /t REG_DWORD /d 1 /f >nul 2>&1
+:: EXPERIMENT
+:: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Executive" /v "ForceEnableMutantAutoboost" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "MoveImages" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "Mirroring" /t REG_DWORD /d 0 /f >nul 2>&1
+
+
+
+@echo [10/15] Kernel Configuration
+:: EXPERIMENT
+:: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "DpcQueueDepth" /t REG_DWORD /d 1 /f >nul 2>&1
+:: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "MaximumSharedReadyQueueSize" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "GlobalTimerResolutionRequests" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "DisableTsx" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "CacheIsoBitmap" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "MitigationOptions" /t REG_BINARY /d 222222222222222222222222222222222222222222222222 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "MitigationAuditOptions" /t REG_BINARY /d 222222222222222222222222222222222222222222222222 /f >nul 2>&1
+:: EXPERIMENT
+:: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "ForceIdleGracePeriod" /t REG_DWORD /d 0 /f >nul 2>&1
+:: REMOVED for stability (extra CPU overhead)
+:: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "AlwaysTrackIoBoosting" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "PowerOffFrozenProcessors" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "InterruptSteeringFlags" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "SeLpacEnableWatsonReporting" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "SeLpacEnableWatsonThrottling" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "EnableWerUserReporting" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "SchedulerAssistThreadFlagOverride" /t REG_DWORD /d 1 /f >nul 2>&1
+
+
+
+@echo [11/15] Power Management  
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "HibernateBootOptimizationEnabled" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "ThermalTelemetryVerbosity" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "FxAccountingTelemetryDisabled" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "PerfBoostAtGuaranteed" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "LatencyToleranceDefault" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "LatencyToleranceVSyncEnabled" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "LatencyToleranceFSVP" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "LatencyToleranceIdleResiliency" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "IdleDurationExpirationTimeout" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "HeteroMultiCoreClassesEnabled" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "HeteroMultiClassParkingEnabled" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "HeteroHgsPlusDisabled" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "ActiveIdleTimeout" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "IdleStateTimeout" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "PerfQueryOnDevicePowerChanges" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power\ModernSleep" /v "EnableDsNetRefresh" /t REG_DWORD /d 0 /f >nul 2>&
+
+
+
+:: ====================================================================
+:: SECTION 8: ADDITIONAL SYSTEM TWEAKS
+:: ====================================================================
+
+@echo Applying Additional Tweaks...
 reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "HyperStartDisabled" /f >nul 2>&1
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VALORANT.exe\PerfOptions" /v "CpuPriorityClass" /t REG_DWORD /d 3 /f >nul 2>&1
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\VALORANT-Win64-Shipping.exe\PerfOptions" /v "CpuPriorityClass" /t REG_DWORD /d 3 /f >nul 2>&1
@@ -1179,8 +1374,38 @@ echo     ^)
 echo ^)
 ) > "C:\Windows\Misc\CleanTemp.bat"
 
-:: Create scheduled task to run every Sunday at 3:00 AM
+Create scheduled task to run every Sunday at 3:00 AM
 schtasks /create /tn "Evolve\Weekly TEMP Cleanup" /tr "C:\Windows\Misc\CleanTemp.bat" /sc weekly /d SUN /st 03:00 /ru SYSTEM /rl HIGHEST /f >nul 2>&1
+
+::@echo Install Modded NVMe Driver
+::
+::set "NVME_PATH=C:\Windows\Evolve\Drivers\NVME Modded Driver"
+::set "CERT_CMD=%NVME_PATH%\Certificate\Import Win-RAID CA.cmd"
+::set "DRIVER_INF=%NVME_PATH%\Driver\secnvme.inf"
+::
+::if exist "%CERT_CMD%" (
+::    if exist "%DRIVER_INF%" (
+::        echo [+] Installing Win-RAID CA Certificate...
+::        pushd "%NVME_PATH%\Certificate"
+::        call "Import Win-RAID CA.cmd" >nul 2>&1
+::        popd
+::        
+::        timeout /t 2 /nobreak >nul
+::        
+::        echo [+] Installing NVMe modded driver...
+::        pnputil /add-driver "%DRIVER_INF%" /install /subdirs >nul 2>&1
+::        
+::        if %errorlevel% equ 0 (
+::            echo [✓] NVMe modded driver installed successfully.
+::        ) else (
+::            echo [!] NVMe driver installation failed. May already be installed or hardware not detected.
+::        )
+::    ) else (
+::        echo [!] Driver INF not found.
+::    )
+::) else (
+::    echo [!] NVMe modded driver not found. Skipping.
+::)
 
 @echo Edge
 reg add "HKLM\Software\Policies\Microsoft\Windows\EdgeUI" /v "DisableMFUTracking" /t REG_DWORD /d "1" /f >nul 2>&1
@@ -1313,7 +1538,13 @@ lodctr /r >nul 2>&1
 winmgmt /resyncperf >nul 2>&1
 
 
-@echo Network
+
+
+:: ====================================================================
+:: SECTION 9: NETWORK OPTIMIZATION
+:: ====================================================================
+
+@echo Optimizing Network Adapters...
 for /f %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}" /v "*SpeedDuplex" /s ^| findstr  "HKEY"') do (
     for /f %%i in ('reg query "%%a" /v "*ReceiveBuffers" ^| findstr "HKEY"') do (
         reg add "%%i" /v "*ReceiveBuffers" /t REG_SZ /d "2048" /f >nul 2>&1
@@ -1554,11 +1785,23 @@ for %%a in (TxIntDelay TxAbsIntDelay RxIntDelay RxAbsIntDelay) do (
 )
 
 
-@echo Network Binding
+
+
+:: ====================================================================
+:: SECTION 9: NETWORK OPTIMIZATION
+:: ====================================================================
+
+@echo Optimizing Network Adapters... Binding
 powershell Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_lldp; Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_msclient; Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_lltdio; Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_implat; Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_rspndr; Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_server >nul 2>&1
 
 
-@echo Network Coalescing
+
+
+:: ====================================================================
+:: SECTION 9: NETWORK OPTIMIZATION
+:: ====================================================================
+
+@echo Optimizing Network Adapters... Coalescing
 powershell Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing Enable >nul 2>&1
 powershell Set-NetOffloadGlobalSetting -PacketCoalescingFilter Disable >nul 2>&1
 
@@ -1628,3 +1871,16 @@ exit /b
 :POWERSHELL
 chcp 437 >nul 2>&1 & powershell -nop -noni -exec bypass -c %* >nul 2>&1 & chcp 65001 >nul 2>&1
 goto:eof
+
+
+:: ====================================================================
+:: FINALIZATION
+:: ====================================================================
+
+@echo.
+@echo ============================================================
+@echo         OPTIMIZATION COMPLETE!
+@echo ============================================================
+@echo.
+@echo All optimizations have been applied successfully.
+@echo.
