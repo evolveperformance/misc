@@ -1,3 +1,25 @@
+@ECHO OFF
+REM BFCPEOPTIONSTART
+REM Advanced BAT to EXE Converter www.BatToExeConverter.com
+REM BFCPEEXE=G:\GitHub Projects\Misc\EvolveOS.exe
+REM BFCPEICON=
+REM BFCPEICONINDEX=-1
+REM BFCPEEMBEDDISPLAY=0
+REM BFCPEEMBEDDELETE=1
+REM BFCPEADMINEXE=0
+REM BFCPEINVISEXE=0
+REM BFCPEVERINCLUDE=1
+REM BFCPEVERVERSION=2.0.0.0
+REM BFCPEVERPRODUCT=Product NameEvolveOS Setup Utility
+REM BFCPEVERDESC=Professional Gaming Optimization Suite 
+REM BFCPEVERCOMPANY=Evolve Performance
+REM BFCPEVERCOPYRIGHT=Copyright � 2025 Evolve Performance
+REM BFCPEWINDOWCENTER=1
+REM BFCPEDISABLEQE=0
+REM BFCPEWINDOWHEIGHT=30
+REM BFCPEWINDOWWIDTH=120
+REM BFCPEWTITLE=EvolveOS Post Install - Professional Gaming Optimization
+REM BFCPEOPTIONEND
 @echo off
 title EvolveOS Post Install - Professional Gaming Optimization v2.0
 mode con: cols=170 lines=50
@@ -1858,20 +1880,15 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "NtfsDisableVolsna
 @echo FlushDns
 ipconfig /flushdns >nul 2>&1
 
-
 @echo Disable Wake Devices
 for /f "tokens=*" %%a in ('powercfg /devicequery wake_armed 2^>nul') do powercfg /devicedisablewake "%%a" >nul 2>&1
 
-
 @echo.
 echo EvolveOS configuration complete!
-exit /b
-
 
 :POWERSHELL
 chcp 437 >nul 2>&1 & powershell -nop -noni -exec bypass -c %* >nul 2>&1 & chcp 65001 >nul 2>&1
 goto:eof
-
 
 :: ====================================================================
 :: FINALIZATION
@@ -1882,5 +1899,7 @@ goto:eof
 @echo         OPTIMIZATION COMPLETE!
 @echo ============================================================
 @echo.
-@echo All optimizations have been applied successfully.
-@echo.
+echo All optimizations have been applied successfully.
+echo.
+echo Returning to launcher...
+exit /b 0

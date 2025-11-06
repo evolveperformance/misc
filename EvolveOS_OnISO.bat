@@ -14,7 +14,6 @@ if errorlevel 1 (
 
 echo Internet connection detected.
 echo.
-
 echo Downloading Evolve OS setup script...
 set "SETUP_BAT=%~dp0EvolveOS_Locally.bat"
 curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS_Locally.bat" -o "%SETUP_BAT%"
@@ -29,8 +28,27 @@ if not exist "%SETUP_BAT%" (
 echo Download completed successfully.
 echo.
 echo Running Evolve OS setup...
+echo.
+
 call "%SETUP_BAT%"
+set SETUP_ERROR=%ERRORLEVEL%
+
+if %SETUP_ERROR% NEQ 0 (
+    echo.
+    echo [!] Setup returned error code: %SETUP_ERROR%
+    echo [!] Press any key to exit without restarting...
+    pause >nul
+    exit /b %SETUP_ERROR%
+)
 
 echo.
-echo Restarting system to apply changes...
-shutdown /r /t 5
+echo ============================================
+echo   EvolveOS Setup Complete!
+echo ============================================
+echo.
+echo System will restart in 10 seconds...
+echo Press any key to restart now, or Ctrl+C to cancel.
+echo.
+
+timeout /t 10
+shutdown /r /t 0 /c "EvolveOS configuration complete. Restarting system..."

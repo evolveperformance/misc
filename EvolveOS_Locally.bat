@@ -83,6 +83,5 @@ del "%Evolve_BAT%" >nul 2>&1
 
 
 echo.
-::echo Restarting system to apply changes...
-::shutdown /r /t 5
-exit /b
+echo Setup completed. Returning to launcher...
+exit /b 0
