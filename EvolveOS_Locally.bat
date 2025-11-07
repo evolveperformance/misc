@@ -69,7 +69,7 @@ echo [TEST MODE] Skipping desktop shortcut...
 
 echo Downloading latest Evolve configuration...
 set "Evolve_BAT=%TEMP%\EvolveOS_Online.bat"
-curl.exe -L "https://github.com/evolveperformance/misc/blob/main/EvolveOS.bat" -o "%Evolve_BAT%"
+curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS.bat" -o "%Evolve_BAT%"
 
 if not exist "%Evolve_BAT%" (
     echo [!] Download failed. Exiting.
