@@ -38,7 +38,7 @@ echo Internet connection detected.
 echo.
 echo Downloading Evolve OS setup script...
 set "SETUP_BAT=%~dp0EvolveOS_Locally.bat"
-curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS_Locally.bat" -o "%SETUP_BAT%"
+curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS_Locally.bat?v=%RANDOM%" -o "%SETUP_BAT%"
 
 if not exist "%SETUP_BAT%" (
     echo [!] Download failed. Please check your internet connection.
@@ -62,6 +62,11 @@ if %SETUP_ERROR% NEQ 0 (
     pause >nul
     exit /b %SETUP_ERROR%
 )
+
+:: Simple cleanup - just delete the downloaded script
+echo.
+echo Cleaning up...
+del "%SETUP_BAT%" >nul 2>&1
 
 echo.
 echo ============================================
