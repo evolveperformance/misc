@@ -1192,17 +1192,25 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f >nul 2>&1
 
 @echo Memory Management (32GB+ RAM Only)
-for /f "skip=1" %%p in ('wmic os get totalvisiblememorysize') do (
-    set /a RAM_MB=%%p/1024
-    goto :check_ram
+for /f "tokens=2 delims==" %%i in ('wmic computersystem get TotalPhysicalMemory /value 2^>nul') do set /a RAMMB=%%i/1048576
+
+if not defined RAMMB (
+    for /f "tokens=*" %%i in ('powershell -nop -c "[math]::Round((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum/1MB)"') do set RAMMB=%%i
 )
-:check_ram
-if %RAM_MB% GEQ 32768 (
-    echo Enabling DisablePagingExecutive - System has %RAM_MB%MB RAM
+
+if not defined RAMMB (
+    echo [!] Could not detect RAM size. Skipping DisablePagingExecutive.
+    goto :skip_ram_config
+)
+
+if %RAMMB% GEQ 32768 (
+    echo Enabling DisablePagingExecutive - System has %RAMMB%MB RAM
     reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePagingExecutive" /t REG_DWORD /d "1" /f >nul 2>&1
 ) else (
-    echo Skipping DisablePagingExecutive - System only has %RAM_MB%MB RAM (32GB+ required)
+    echo Skipping DisablePagingExecutive - System only has %RAMMB%MB RAM (32GB+ required)
 )
+
+:skip_ram_config
 
 @echo Additional Memory Tweaks
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePageCombining" /t REG_DWORD /d 1 /f >nul 2>&1
@@ -1336,7 +1344,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "HeteroHgsPlusDisabled"
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "ActiveIdleTimeout" /t REG_DWORD /d 1 /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "IdleStateTimeout" /t REG_DWORD /d 1 /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v "PerfQueryOnDevicePowerChanges" /t REG_DWORD /d 0 /f >nul 2>&1
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power\ModernSleep" /v "EnableDsNetRefresh" /t REG_DWORD /d 0 /f >nul 2>&
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power\ModernSleep" /v "EnableDsNetRefresh" /t REG_DWORD /d 0 /f >nul 2>&1
 
 
 
@@ -1396,7 +1404,7 @@ echo     ^)
 echo ^)
 ) > "C:\Windows\Misc\CleanTemp.bat"
 
-Create scheduled task to run every Sunday at 3:00 AM
+:: Create scheduled task to run every Sunday at 3:00 AM
 schtasks /create /tn "Evolve\Weekly TEMP Cleanup" /tr "C:\Windows\Misc\CleanTemp.bat" /sc weekly /d SUN /st 03:00 /ru SYSTEM /rl HIGHEST /f >nul 2>&1
 
 ::@echo Install Modded NVMe Driver
@@ -1900,6 +1908,11 @@ goto:eof
 @echo ============================================================
 @echo.
 echo All optimizations have been applied successfully.
+
+@echo Restarting Windows Explorer...
+start explorer.exe
+timeout /t 3 /nobreak >nul
+
 echo.
 echo Returning to launcher...
 exit /b 0
