@@ -13,7 +13,7 @@ REM BFCPEVERVERSION=1.0.0.0
 REM BFCPEVERPRODUCT=Evolve Performance Optimization
 REM BFCPEVERDESC=Evolve Performance Post Install for ISO
 REM BFCPEVERCOMPANY=Evolve Performance
-REM BFCPEVERCOPYRIGHT=Copyright © 2025 Evolve Performance
+REM BFCPEVERCOPYRIGHT=Copyright ï¿½ 2025 Evolve Performance
 REM BFCPEWINDOWCENTER=1
 REM BFCPEDISABLEQE=0
 REM BFCPEWINDOWHEIGHT=30
@@ -38,7 +38,7 @@ echo Internet connection detected.
 echo.
 echo Downloading Evolve OS setup script...
 set "SETUP_BAT=%~dp0EvolveOS_Locally.bat"
-curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS_Locally.bat" -o "%SETUP_BAT%"
+curl.exe -L "https://github.com/evolveperformance/misc/blob/main/EvolveOS_Locally.bat" -o "%SETUP_BAT%"
 
 if not exist "%SETUP_BAT%" (
     echo [!] Download failed. Please check your internet connection.

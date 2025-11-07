@@ -1,22 +1,16 @@
 @echo off
 title Evolve OS Setup
 
-:: TESTING MODE - Downloads disabled
+:checkInternet
+echo Checking internet connection...
+ping -n 1 8.8.8.8 >nul 2>&1
+if errorlevel 1 (
+    echo No internet connection. Retrying in 5 seconds...
+    timeout /t 5 /nobreak >nul
+    goto checkInternet
+)
 
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: INTERNET CHECK DISABLED FOR TESTING
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: :checkInternet
-:: echo Checking internet connection...
-:: ping -n 1 8.8.8.8 >nul 2>&1
-:: if errorlevel 1 (
-::     echo No internet connection. Retrying in 5 seconds...
-::     timeout /t 5 /nobreak >nul
-::     goto checkInternet
-:: )
-:: echo Internet connection detected.
-
-echo [TEST MODE] Skipping internet check...
+echo Internet connection detected.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: MISC FOLDER DOWNLOAD DISABLED FOR TESTING
@@ -37,7 +31,7 @@ echo [TEST MODE] Skipping internet check...
 :: echo Misc folder extracted successfully.
 :: del "%Misc_ZIP%" >nul 2>&1
 
-echo [TEST MODE] Skipping WindowsMisc download/extraction...
+echo [TEST MODE] Skipping WindowsMisc download...
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: EVOLVE FOLDER DOWNLOAD DISABLED FOR TESTING
@@ -58,7 +52,7 @@ echo [TEST MODE] Skipping WindowsMisc download/extraction...
 :: echo Evolve folder extracted successfully.
 :: del "%Evolve_ZIP%" >nul 2>&1
 
-echo [TEST MODE] Skipping Evolve folder download/extraction...
+echo [TEST MODE] Skipping Evolve folder download...
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: DESKTOP SHORTCUT DISABLED FOR TESTING
@@ -71,21 +65,16 @@ echo [TEST MODE] Skipping Evolve folder download/extraction...
 :: $shortcut.IconLocation = 'C:\Windows\System32\imageres.dll,3'; ^
 :: $shortcut.Save()"
 
-echo [TEST MODE] Skipping desktop shortcut creation...
+echo [TEST MODE] Skipping desktop shortcut...
 
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: EVOLVEOS.BAT DOWNLOAD DISABLED FOR TESTING
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: echo Downloading latest Evolve configuration...
-:: set "Evolve_BAT=%TEMP%\EvolveOS_Online.bat"
-:: curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS.bat" -o "%Evolve_BAT%"
-:: if not exist "%Evolve_BAT%" (
-::     echo [!] Download failed. Exiting.
-::     exit /b
-:: )
+echo Downloading latest Evolve configuration...
+set "Evolve_BAT=%TEMP%\EvolveOS_Online.bat"
+curl.exe -L "https://github.com/evolveperformance/misc/blob/main/EvolveOS.bat" -o "%Evolve_BAT%"
 
-echo [TEST MODE] Using local EvolveOS.bat instead of downloading...
-set "Evolve_BAT=%~dp0EvolveOS.bat"
+if not exist "%Evolve_BAT%" (
+    echo [!] Download failed. Exiting.
+    exit /b
+)
 
 echo Running Evolve setup...
 call "%Evolve_BAT%"
