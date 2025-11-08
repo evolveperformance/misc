@@ -75,8 +75,18 @@ Call "C:\Windows\Misc\VisualCRuntimes\install_all.bat" >nul 2>&1
 reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
 
+:: Install Windows Terminal
+winget install --id Microsoft.WindowsTerminal --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
 
-
+@echo Creating Desktop Shortcut to Evolve App Installer...
+powershell -Command ^
+"$shell = New-Object -ComObject WScript.Shell; ^
+$shortcut = $shell.CreateShortcut('%USERPROFILE%\Desktop\Evolve App Installer.lnk'); ^
+$shortcut.TargetPath = 'C:\Windows\Evolve\Evolve App Installer.exe'; ^
+$shortcut.WorkingDirectory = 'C:\Windows\Evolve'; ^
+$shortcut.IconLocation = 'C:\Windows\Evolve\Evolve App Installer.exe,0'; ^
+$shortcut.Description = 'Install Apps for EvolveOS'; ^
+$shortcut.Save()"
 
 :: ====================================================================
 :: SECTION 3: POWERSHELL CONFIGURATION
@@ -483,12 +493,52 @@ reg add "HKCR\.nip\Shell" /ve /t REG_SZ /d "Import" /f >nul 2>&1
 reg add "HKCR\.nip\Shell\Import\Command" /ve /t REG_EXPAND_SZ /d "\"C:\Windows\Misc\nvidiaprofileinspector.exe\" \"%%1\"" /f >nul 2>&1
 reg add "HKCR\.nip\DefaultIcon" /ve /t REG_EXPAND_SZ /d "C:\Windows\Misc\nvidiaprofileinspector.exe,0" /f >nul 2>&1
 
-
 @echo Configure .pow
 reg add "HKCR\.pow" /ve /t REG_SZ /d "Power Plan" /f >nul 2>&1
 reg add "HKCR\.pow" /v "FriendlyTypeName" /t REG_SZ /d "Power Plan" /f >nul 2>&1
 reg add "HKCR\.pow\DefaultIcon" /ve /t REG_EXPAND_SZ /d "%%SystemRoot%%\System32\powercfg.cpl,-202" /f >nul 2>&1
-reg add "HKCR\.pow\shell\Import\command" /ve /t REG_SZ /d "powercfg /import \"%%1\"" /f >nul 2>&1
+reg add "HKCR\.pow\shell\Import\command" /ve /t REG_SZ /d "powercfg /import \"%%1\"" /f >nul 2>&1#
+
+@echo Configure .ps1
+reg add "HKLM\SOFTWARE\Classes\.ps1" /v "" /t REG_SZ /d "Microsoft.PowerShellScript.1" /f 
+reg add "HKLM\SOFTWARE\Classes\.ps1\DefaultIcon" /v "" /t REG_SZ /d "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\"" /f
+reg add "HKLM\SOFTWARE\Classes\.ps1\shell" /f 
+reg add "HKLM\SOFTWARE\Classes\.ps1\shell\Import" /f
+reg add "HKLM\SOFTWARE\Classes\.ps1\shell\Import\command" /v "" /t REG_SZ /d "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" /f
+reg add "HKCR\.ps1\DefaultIcon" /ve /t REG_EXPAND_SZ /d "C:\Windows\SysWOW64\WindowsPowerShell\v1.0" /f >nul 2>&1
+
+@echo Configuring MPC-HC as Default Media Player...
+set "MPC=C:\Program Files\MPC-HC\mpc-hc64.exe"
+:: Video Formats
+ftype MPC.Video="%MPC%" "%%1" >nul 2>&1
+assoc .mp4=MPC.Video >nul 2>&1
+assoc .mkv=MPC.Video >nul 2>&1
+assoc .avi=MPC.Video >nul 2>&1
+assoc .mov=MPC.Video >nul 2>&1
+assoc .wmv=MPC.Video >nul 2>&1
+assoc .flv=MPC.Video >nul 2>&1
+assoc .webm=MPC.Video >nul 2>&1
+assoc .m4v=MPC.Video >nul 2>&1
+assoc .mpg=MPC.Video >nul 2>&1
+assoc .mpeg=MPC.Video >nul 2>&1
+assoc .m2ts=MPC.Video >nul 2>&1
+assoc .ts=MPC.Video >nul 2>&1
+assoc .3gp=MPC.Video >nul 2>&1
+assoc .ogv=MPC.Video >nul 2>&1
+:: Audio Formats
+ftype MPC.Audio="%MPC%" "%%1" >nul 2>&1
+assoc .mp3=MPC.Audio >nul 2>&1
+assoc .m4a=MPC.Audio >nul 2>&1
+assoc .aac=MPC.Audio >nul 2>&1
+assoc .flac=MPC.Audio >nul 2>&1
+assoc .wav=MPC.Audio >nul 2>&1
+assoc .wma=MPC.Audio >nul 2>&1
+assoc .ogg=MPC.Audio >nul 2>&1
+assoc .opus=MPC.Audio >nul 2>&1
+assoc .ape=MPC.Audio >nul 2>&1
+assoc .alac=MPC.Audio >nul 2>&1
+reg add "HKCR\MPC.Video\DefaultIcon" /ve /t REG_SZ /d "%MPC%,0" /f >nul 2>&1
+reg add "HKCR\MPC.Audio\DefaultIcon" /ve /t REG_SZ /d "%MPC%,0" /f >nul 2>&1
 
 @echo Remove Basic Powerplans
 powercfg -delete 381b4222-f694-41f0-9685-ff5bb260df2e>nul 2>&1
@@ -522,15 +572,31 @@ reg delete "HKCR\AllFilesystemObjects\shellex\ContextMenuHandlers\PreviousVersio
 reg delete "HKCR\AllFilesystemObjects\shellex\ContextMenuHandlers\SendTo" /f >nul 2>&1
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}" /ve /t REG_SZ /d "" /f >nul 2>&1
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /ve /t REG_SZ /d "" /f >nul 2>&1
-reg add "HKCR\Directory\shell\OpenCmdHere" /ve /d "Open CMD Here" /f >nul 2>&1
-reg add "HKCR\Directory\shell\OpenCmdHere\command" /ve /d "cmd.exe /k cd /d \"%%1\"" /f >nul 2>&1
-reg add "HKCR\Directory\Background\shell\OpenCmdHere" /ve /d "Open CMD Here" /f >nul 2>&1
-reg add "HKCR\Directory\Background\shell\OpenCmdHere\command" /ve /d "cmd.exe /k cd /d \"%%V\"" /f >nul 2>&1
-reg add "HKCR\Directory\shell\OpenPsHere" /ve /d "Open PowerShell Here" /f >nul 2>&1
-reg add "HKCR\Directory\shell\OpenPsHere\command" /ve /d "powershell.exe -NoExit -Command \"Set-Location -LiteralPath '%1'\"" /f >nul 2>&1
-reg add "HKCR\Directory\Background\shell\OpenPsHere" /ve /d "Open PowerShell Here" /f >nul 2>&1
-reg add "HKCR\Directory\Background\shell\OpenPsHere\command" /ve /d "powershell.exe -NoExit -Command \"Set-Location -LiteralPath '%V'\"" /f >nul 2>&1
 
+@echo Adding Context Menu Shortcuts...
+reg add "HKCR\Directory\Background\shell\RebootUEFI" /ve /t REG_SZ /d "Restart to BIOS" /f >nul 2>&1
+reg add "HKCR\Directory\Background\shell\RebootUEFI" /v "Icon" /t REG_SZ /d "shell32.dll,-16739" /f >nul 2>&1
+reg add "HKCR\Directory\Background\shell\RebootUEFI" /v "HasLUAShield" /t REG_SZ /d "" /f >nul 2>&1
+reg add "HKCR\Directory\Background\shell\RebootUEFI\command" /ve /t REG_SZ /d "shutdown /r /fw /t 0" /f >nul 2>&1
+
+@echo Creating Silent RAM Cleaner...
+echo Set WshShell = CreateObject("WScript.Shell") > "C:\Windows\Misc\ClearRAM.vbs"
+echo WshShell.Run "powershell -WindowStyle Hidden -NoProfile -Command ""$ws = New-Object -ComObject Shell.Application; $ws.NameSpace('shell:::{645FF040-5081-101B-9F08-00AA002F954E}').Self.InvokeVerb('Empty'); [System.GC]::Collect()""", 0, False >> "C:\Windows\Misc\ClearRAM.vbs"
+reg add "HKCR\Directory\Background\shell\ClearRAM" /ve /t REG_SZ /d "Clear RAM Cache" /f >nul 2>&1
+reg add "HKCR\Directory\Background\shell\ClearRAM" /v "Icon" /t REG_SZ /d "imageres.dll,-5302" /f >nul 2>&1
+reg add "HKCR\Directory\Background\shell\ClearRAM\command" /ve /t REG_SZ /d "wscript.exe \"C:\\Windows\\Misc\\ClearRAM.vbs\"" /f >nul 2>&1
+
+reg add "HKCR\Directory\Background\shell\ClearTemp" /ve /t REG_SZ /d "Clear TEMP Files" /f >nul 2>&1
+reg add "HKCR\Directory\Background\shell\ClearTemp" /v "Icon" /t REG_SZ /d "imageres.dll,-5309" /f >nul 2>&1
+reg add "HKCR\Directory\Background\shell\ClearTemp\command" /ve /t REG_SZ /d "cmd /c \"del /q /f /s %%TEMP%%\\* 2>nul & del /q /f /s C:\\Windows\\Temp\\* 2>nul & echo TEMP Files Cleared! & timeout /t 2 >nul\"" /f >nul 2>&1
+
+@echo Windows Terminal on Context Menu Desktop and Folder
+reg add "HKCU\SOFTWARE\Classes\Directory\shell\WindowsTerminal" /ve /t REG_SZ /d "Open in Terminal" /f >nul 2>&1
+reg add "HKCU\SOFTWARE\Classes\Directory\shell\WindowsTerminal" /v "Icon" /t REG_SZ /d "%%LOCALAPPDATA%%\Microsoft\WindowsApps\wt.exe" /f >nul 2>&1
+reg add "HKCU\SOFTWARE\Classes\Directory\shell\WindowsTerminal\command" /ve /t REG_SZ /d "wt.exe -d \"%%1\"" /f >nul 2>&1
+reg add "HKCU\SOFTWARE\Classes\Directory\Background\shell\WindowsTerminal" /ve /t REG_SZ /d "Open in Terminal" /f >nul 2>&1
+reg add "HKCU\SOFTWARE\Classes\Directory\Background\shell\WindowsTerminal" /v "Icon" /t REG_SZ /d "%%LOCALAPPDATA%%\Microsoft\WindowsApps\wt.exe" /f >nul 2>&1
+reg add "HKCU\SOFTWARE\Classes\Directory\Background\shell\WindowsTerminal\command" /ve /t REG_SZ /d "wt.exe -d \"%%V\"" /f >nul 2>&1
 
 @echo Desktop Settings
 reg add "HKCU\Control Panel\Desktop" /v "HungAppTimeout" /t REG_SZ /d 2000 /f >nul 2>&1
