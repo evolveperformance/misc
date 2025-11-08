@@ -507,38 +507,26 @@ reg add "HKLM\SOFTWARE\Classes\.ps1\shell\Import" /f
 reg add "HKLM\SOFTWARE\Classes\.ps1\shell\Import\command" /v "" /t REG_SZ /d "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" /f
 reg add "HKCR\.ps1\DefaultIcon" /ve /t REG_EXPAND_SZ /d "C:\Windows\SysWOW64\WindowsPowerShell\v1.0" /f >nul 2>&1
 
-@echo Configuring MPC-HC as Default Media Player...
+@echo Configuring MPC-HC File Associations...
 set "MPC=C:\Program Files\MPC-HC\mpc-hc64.exe"
-:: Video Formats
-ftype MPC.Video="%MPC%" "%%1" >nul 2>&1
-assoc .mp4=MPC.Video >nul 2>&1
-assoc .mkv=MPC.Video >nul 2>&1
-assoc .avi=MPC.Video >nul 2>&1
-assoc .mov=MPC.Video >nul 2>&1
-assoc .wmv=MPC.Video >nul 2>&1
-assoc .flv=MPC.Video >nul 2>&1
-assoc .webm=MPC.Video >nul 2>&1
-assoc .m4v=MPC.Video >nul 2>&1
-assoc .mpg=MPC.Video >nul 2>&1
-assoc .mpeg=MPC.Video >nul 2>&1
-assoc .m2ts=MPC.Video >nul 2>&1
-assoc .ts=MPC.Video >nul 2>&1
-assoc .3gp=MPC.Video >nul 2>&1
-assoc .ogv=MPC.Video >nul 2>&1
-:: Audio Formats
-ftype MPC.Audio="%MPC%" "%%1" >nul 2>&1
-assoc .mp3=MPC.Audio >nul 2>&1
-assoc .m4a=MPC.Audio >nul 2>&1
-assoc .aac=MPC.Audio >nul 2>&1
-assoc .flac=MPC.Audio >nul 2>&1
-assoc .wav=MPC.Audio >nul 2>&1
-assoc .wma=MPC.Audio >nul 2>&1
-assoc .ogg=MPC.Audio >nul 2>&1
-assoc .opus=MPC.Audio >nul 2>&1
-assoc .ape=MPC.Audio >nul 2>&1
-assoc .alac=MPC.Audio >nul 2>&1
-reg add "HKCR\MPC.Video\DefaultIcon" /ve /t REG_SZ /d "%MPC%,0" /f >nul 2>&1
-reg add "HKCR\MPC.Audio\DefaultIcon" /ve /t REG_SZ /d "%MPC%,0" /f >nul 2>&1
+:: Video extensions
+for %%e in (mp4 mkv avi mov wmv flv webm m4v mpg mpeg m2ts ts 3gp ogv) do (
+    reg add "HKCR\.%%e" /ve /t REG_SZ /d "MPC.Video" /f >nul 2>&1
+    reg add "HKCR\.%%e\OpenWithProgids" /v "MPC.Video" /t REG_NONE /f >nul 2>&1
+)
+:: Audio extensions
+for %%e in (mp3 m4a aac flac wav wma ogg opus ape alac) do (
+    reg add "HKCR\.%%e" /ve /t REG_SZ /d "MPC.Audio" /f >nul 2>&1
+    reg add "HKCR\.%%e\OpenWithProgids" /v "MPC.Audio" /t REG_NONE /f >nul 2>&1
+)
+:: Configure MPC.Video handler
+reg add "HKCR\MPC.Video" /ve /t REG_SZ /d "MPC-HC Video File" /f >nul 2>&1
+reg add "HKCR\MPC.Video\DefaultIcon" /ve /t REG_EXPAND_SZ /d "\"%MPC%\",0" /f >nul 2>&1
+reg add "HKCR\MPC.Video\shell\open\command" /ve /t REG_EXPAND_SZ /d "\"%MPC%\" \"%%1\"" /f >nul 2>&1
+:: Configure MPC.Audio handler
+reg add "HKCR\MPC.Audio" /ve /t REG_SZ /d "MPC-HC Audio File" /f >nul 2>&1
+reg add "HKCR\MPC.Audio\DefaultIcon" /ve /t REG_EXPAND_SZ /d "\"%MPC%\",0" /f >nul 2>&1
+reg add "HKCR\MPC.Audio\shell\open\command" /ve /t REG_EXPAND_SZ /d "\"%MPC%\" \"%%1\"" /f >nul 2>&1
 
 @echo Remove Basic Powerplans
 powercfg -delete 381b4222-f694-41f0-9685-ff5bb260df2e>nul 2>&1
