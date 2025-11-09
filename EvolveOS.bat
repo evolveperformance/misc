@@ -79,7 +79,7 @@ copy /Y "C:\Windows\Misc\Draculassi Open-Shell Theme.skin7" "C:\Program Files\Op
 copy /Y "C:\Windows\Misc\Draculassi Open-Shell Config.xml" "C:\Program Files\Open-Shell\" >nul 2>&1
 ren "C:\Program Files\Open-Shell\Skins\Draculassi Open-Shell Theme.skin7" "Fluent-Metro.skin7" >nul 2>&1
 "C:\Program Files\Open-Shell\StartMenu.exe" -xml "C:\Program Files\Open-Shell\Draculassi Open-Shell Config.xml" >nul 2>&1
-reg import "C:\Windows\Misc\OLED Theme.reg" >nul 2>&1
+:: reg import "C:\Windows\Misc\OLED Theme.reg" >nul 2>&1
 
 
 @echo Installing Windows Terminal...
