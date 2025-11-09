@@ -68,10 +68,10 @@ del "%TEMP%\activate.vbs" >nul 2>&1
 :: ====================================================================
 
 @echo Installing Essential Tools...
-Call "C:\Windows\Misc\VisualCRuntimes\install_all.bat" >nul 2>&1
-"C:\Windows\Misc\DirectX\DX.exe" /silent >nul 2>&1
-"C:\Windows\Misc\7z2501-x64.exe" /S >nul 2>&1
-"C:\Windows\Misc\StartAllBackSetup.exe" /silent /allusers >nul 2>&1
+:: Call "C:\Windows\Misc\VisualCRuntimes\install_all.bat" >nul 2>&1
+:: "C:\Windows\Misc\DirectX\DX.exe" /silent >nul 2>&1
+:: "C:\Windows\Misc\7z2501-x64.exe" /S >nul 2>&1
+:: "C:\Windows\Misc\StartAllBackSetup.exe" /silent /allusers >nul 2>&1
 reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
 
