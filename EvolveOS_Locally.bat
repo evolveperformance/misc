@@ -76,7 +76,7 @@ $shortcut.Save()"
 
 echo Downloading Evolve background wallpaper...
 set "BG_IMAGE=%TEMP%\EvolveBackground.jpg"
-curl.exe -L "https://google.com" -o "%BG_IMAGE%"
+curl.exe -L "https://raw.githubusercontent.com/evolveperformance/misc/main/background.png" -o "%BG_IMAGE%"
 
 
 if not exist "%BG_IMAGE%" (
