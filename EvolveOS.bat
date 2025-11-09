@@ -75,8 +75,24 @@ Call "C:\Windows\Misc\VisualCRuntimes\install_all.bat" >nul 2>&1
 reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
 
-:: Install Windows Terminal
+@echo Installing Windows Terminal...
 winget install --id Microsoft.WindowsTerminal --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
+
+@echo Installing Oh My Posh...
+winget install --id JanDeDobbeleer.OhMyPosh --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
+
+@echo Installing Nerd Font (CascadiaCode)...
+winget install --id "Cascadia Code Nerd Font" -s winget --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
+
+@echo Installing Visual Studio Code...
+winget install --id Microsoft.VisualStudioCode --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /MERGETASKS=!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath" >nul 2>&1
+
+@echo Installing Discord...
+winget install --id Discord.Discord --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
+
+@echo Installing .NET 8 Runtime...
+winget install Microsoft.DotNet.Runtime.8 --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
+
 
 @echo Creating Desktop Shortcut to Evolve App Installer...
 powershell -Command ^
@@ -527,6 +543,21 @@ reg add "HKCR\MPC.Video\shell\open\command" /ve /t REG_EXPAND_SZ /d "\"%MPC%\" \
 reg add "HKCR\MPC.Audio" /ve /t REG_SZ /d "MPC-HC Audio File" /f >nul 2>&1
 reg add "HKCR\MPC.Audio\DefaultIcon" /ve /t REG_EXPAND_SZ /d "\"%MPC%\",0" /f >nul 2>&1
 reg add "HKCR\MPC.Audio\shell\open\command" /ve /t REG_EXPAND_SZ /d "\"%MPC%\" \"%%1\"" /f >nul 2>&1
+
+@echo Configuring Oh My Posh Profile...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$profileDir = [System.IO.Path]::GetDirectoryName($PROFILE); if (!(Test-Path $profileDir)) { New-Item -ItemType Directory -Path $profileDir -Force | Out-Null }; if (!(Test-Path $PROFILE)) { New-Item -Path $PROFILE -Type File -Force | Out-Null }; $line = 'oh-my-posh init pwsh --config $env:POSH_THEMES_PATH\dracula.omp.json | Invoke-Expression'; if (!(Get-Content $PROFILE -ErrorAction SilentlyContinue | Select-String 'oh-my-posh' -Quiet)) { Add-Content -Path $PROFILE -Value \"`n$line\" }"
+
+@echo Enabling Clipboard History...
+reg add "HKCU\Software\Microsoft\Clipboard" /v "EnableClipboardHistory" /t REG_DWORD /d "1" /f >nul 2>&1
+
+@echo Disabling Sticky Keys Warning...
+reg add "HKCU\Control Panel\Accessibility\StickyKeys" /v "Flags" /t REG_SZ /d "506" /f >nul 2>&1
+reg add "HKCU\Control Panel\Accessibility\ToggleKeys" /v "Flags" /t REG_SZ /d "58" /f >nul 2>&1
+reg add "HKCU\Control Panel\Accessibility\Keyboard Response" /v "Flags" /t REG_SZ /d "122" /f >nul 2>&1
+
+@echo Auto Clear Recycle Bin
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "01" /t REG_DWORD /d "1" /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "04" /t REG_DWORD /d "1" /f >nul 2>&1
 
 @echo Remove Basic Powerplans
 powercfg -delete 381b4222-f694-41f0-9685-ff5bb260df2e>nul 2>&1
