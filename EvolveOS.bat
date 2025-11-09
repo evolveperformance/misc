@@ -71,19 +71,19 @@ del "%TEMP%\activate.vbs" >nul 2>&1
 Call "C:\Windows\Misc\VisualCRuntimes\install_all.bat" >nul 2>&1
 "C:\Windows\Misc\DirectX\DX.exe" /silent >nul 2>&1
 "C:\Windows\Misc\7z2501-x64.exe" /S >nul 2>&1
-"C:\Windows\Misc\StartAllBackSetup.exe" /silent /allusers >nul 2>&1
 "C:\Windows\Misc\MPC-HC.2.5.5.x64.exe" /VERYSILENT /NORESTART >nul 2>&1
-reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
+
+"C:\Windows\Misc\openshell.exe" /quiet /norestart >nul 2>&1
+copy /Y "C:\Windows\Misc\Draculassi Open-Shell Theme.skin7" "C:\Program Files\Open-Shell\Skins\" >nul 2>&1
+copy /Y "C:\Windows\Misc\Draculassi Open-Shell Config.xml" "C:\Program Files\Open-Shell\" >nul 2>&1
+ren "C:\Program Files\Open-Shell\Skins\Draculassi Open-Shell Theme.skin7" "Fluent-Metro.skin7" >nul 2>&1
+"C:\Program Files\Open-Shell\StartMenu.exe" -xml "C:\Program Files\Open-Shell\Draculassi Open-Shell Config.xml" >nul 2>&1
+reg import "C:\Windows\Misc\OLED Theme.reg" >nul 2>&1
+
 
 @echo Installing Windows Terminal...
 winget install --id Microsoft.WindowsTerminal --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
-
-@echo Installing Oh My Posh...
-winget install --id JanDeDobbeleer.OhMyPosh --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
-
-@echo Installing Nerd Font (CascadiaCode)...
-winget install --id "Cascadia Code Nerd Font" -s winget --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
 
 @echo Installing Visual Studio Code...
 winget install --id Microsoft.VisualStudioCode --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /MERGETASKS=!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath" >nul 2>&1
@@ -551,9 +551,6 @@ reg add "HKCR\MPC.Audio" /ve /t REG_SZ /d "MPC-HC Audio File" /f >nul 2>&1
 reg add "HKCR\MPC.Audio\DefaultIcon" /ve /t REG_EXPAND_SZ /d "\"%MPC%\",0" /f >nul 2>&1
 reg add "HKCR\MPC.Audio\shell\open\command" /ve /t REG_EXPAND_SZ /d "\"%MPC%\" \"%%1\"" /f >nul 2>&1
 
-@echo Configuring Oh My Posh Profile...
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$profileDir = [System.IO.Path]::GetDirectoryName($PROFILE); if (!(Test-Path $profileDir)) { New-Item -ItemType Directory -Path $profileDir -Force | Out-Null }; if (!(Test-Path $PROFILE)) { New-Item -Path $PROFILE -Type File -Force | Out-Null }; $line = 'oh-my-posh init pwsh --config $env:POSH_THEMES_PATH\dracula.omp.json | Invoke-Expression'; if (!(Get-Content $PROFILE -ErrorAction SilentlyContinue | Select-String 'oh-my-posh' -Quiet)) { Add-Content -Path $PROFILE -Value \"`n$line\" }"
-
 @echo Enabling Clipboard History...
 reg add "HKCU\Software\Microsoft\Clipboard" /v "EnableClipboardHistory" /t REG_DWORD /d "1" /f >nul 2>&1
 
@@ -579,6 +576,7 @@ powercfg -delete e9a42b02-d5df-448d-aa00-03f14749eb61>nul 2>&1
 @echo Download and Import Power Plan
 curl -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS.pow" -o "%TEMP%\EvolveOS.pow" >nul 2>&1
 powercfg -import "%TEMP%\EvolveOS.pow" 69696969-6969-6969-6969-696969696969
+powercfg -setactive 69696969-6969-6969-6969-696969696969
 del /f /q "%TEMP%\EvolveOS.pow" >nul 2>&1
 
 @echo Configure Context Menu
@@ -1976,6 +1974,15 @@ for /f "tokens=*" %%B in ('reg query "HKLM\SYSTEM\CurrentControlSet\Services\Net
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "NtfsDisable8dot3NameCreation" /t REG_DWORD /d "1" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "NtfsDisableVolsnapHints" /t REG_DWORD /d "1" /f >nul 2>&1
 
+@echo Window Snapping
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v SnapAssist /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v EnableSnapAssistFlyout /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v EnableTaskGroups /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v EnableSnapBar /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v DITest /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKCU\Control Panel\Desktop" /v WindowArrangementActive /t REG_SZ /d 1 /f >nul 2>&1
+
+reg import "C:\Windows\Misc\EvolveTweaks.reg"
 
 @echo FlushDns
 ipconfig /flushdns >nul 2>&1
