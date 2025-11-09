@@ -104,6 +104,12 @@ $shortcut.IconLocation = 'C:\Windows\Evolve\Evolve App Installer.exe,0'; ^
 $shortcut.Description = 'Install Apps for EvolveOS'; ^
 $shortcut.Save()"
 
+@echo Setting Evolve wallpaper...
+reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "C:\Windows\Web\Wallpaper\EvolveBackground.jpg" /f
+reg add "HKCU\Control Panel\Desktop" /v WallpaperStyle /t REG_SZ /d 10 /f
+RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
+
+
 :: ====================================================================
 :: SECTION 3: POWERSHELL CONFIGURATION
 :: ====================================================================
