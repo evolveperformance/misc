@@ -94,8 +94,8 @@ winget install --id Microsoft.VisualStudioCode --silent --accept-source-agreemen
 @echo Installing Discord...
 winget install --id Discord.Discord --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
 
-@echo Installing .NET 8 Runtime...
-winget install Microsoft.DotNet.Runtime.8 --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
+@echo Install .NET 8
+"C:\Windows\Misc\NET 8.exe" /install /quiet /norestart >nul 2>&1
 
 
 @echo Creating Desktop Shortcut to Evolve App Installer...
