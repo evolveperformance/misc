@@ -72,13 +72,16 @@ Call "C:\Windows\Misc\VisualCRuntimes\install_all.bat" >nul 2>&1
 "C:\Windows\Misc\DirectX\DX.exe" /silent >nul 2>&1
 "C:\Windows\Misc\7z2501-x64.exe" /S >nul 2>&1
 "C:\Windows\Misc\MPC-HC.2.5.5.x64.exe" /VERYSILENT /NORESTART >nul 2>&1
+"C:\Windows\Misc\StartAllBackSetup.exe" /silent /allusers >nul 2>&1
+powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File "C:\Windows\Misc\PatchStartAllBack.ps1" >nul 2>&1
+reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
 
-"C:\Windows\Misc\openshell.exe" /quiet /norestart >nul 2>&1
-copy /Y "C:\Windows\Misc\Draculassi Open-Shell Theme.skin7" "C:\Program Files\Open-Shell\Skins\" >nul 2>&1
-copy /Y "C:\Windows\Misc\Draculassi Open-Shell Config.xml" "C:\Program Files\Open-Shell\" >nul 2>&1
-ren "C:\Program Files\Open-Shell\Skins\Draculassi Open-Shell Theme.skin7" "Fluent-Metro.skin7" >nul 2>&1
-"C:\Program Files\Open-Shell\StartMenu.exe" -xml "C:\Program Files\Open-Shell\Draculassi Open-Shell Config.xml" >nul 2>&1
+:: "C:\Windows\Misc\openshell.exe" /quiet /norestart >nul 2>&1
+:: copy /Y "C:\Windows\Misc\Draculassi Open-Shell Theme.skin7" "C:\Program Files\Open-Shell\Skins\" >nul 2>&1
+:: copy /Y "C:\Windows\Misc\Draculassi Open-Shell Config.xml" "C:\Program Files\Open-Shell\" >nul 2>&1
+:: ren "C:\Program Files\Open-Shell\Skins\Draculassi Open-Shell Theme.skin7" "Fluent-Metro.skin7" >nul 2>&1
+:: "C:\Program Files\Open-Shell\StartMenu.exe" -xml "C:\Program Files\Open-Shell\Draculassi Open-Shell Config.xml" >nul 2>&1
 :: reg import "C:\Windows\Misc\OLED Theme.reg" >nul 2>&1
 
 
