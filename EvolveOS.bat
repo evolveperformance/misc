@@ -1995,7 +1995,6 @@ echo EvolveOS configuration complete!
 
 :POWERSHELL
 chcp 437 >nul 2>&1 & powershell -nop -noni -exec bypass -c %* >nul 2>&1 & chcp 65001 >nul 2>&1
-goto:eof
 
 :: ====================================================================
 :: FINALIZATION
