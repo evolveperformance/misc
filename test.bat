@@ -1,5 +1,7 @@
 @echo off
 
-"C:\Windows\Misc\StartAllBackSetup.exe" /silent /allusers >nul 2>&1
-powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File "C:\Windows\Misc\PatchStartAllBack.ps1" >nul 2>&1
-reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
+@echo Install Icon to Path
+curl.exe -L "https://github.com/evolveperformance/misc/raw/main/blank.ico?v=%RANDOM%" -o "C:\Windows\EvolveSetup\Visuals\blank.ico"
+
+copy "C:\Windows\EvolveSetup\Visuals\blank.ico" "C:\Windows" /Y >nul 
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 29 /t REG_SZ /d "C:\Windows\blank.ico" /f >nul 2>&1
