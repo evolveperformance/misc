@@ -79,6 +79,19 @@ reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
 @echo Install Icon to Path
 curl.exe -L "https://github.com/evolveperformance/misc/raw/main/blank.ico?v=%RANDOM%" -o "C:\Windows\EvolveSetup\Visuals\blank.ico"
 
+@echo Install SetTimerResolution EXE
+curl.exe -L "https://github.com/evolveperformance/misc/raw/main/SetTimerResolution.exe?v=%RANDOM%" -o "C:\Windows\EvolveSetup\misc\SetTimerResolution.exe"
+
+REM Create Startup shortcut via PowerShell
+powershell.exe -NoLogo -NoProfile -Command ^
+  "$startup = [Environment]::GetFolderPath('Startup');" ^
+  "$wshell  = New-Object -ComObject WScript.Shell;" ^
+  "$shortcut = $wshell.CreateShortcut((Join-Path $startup 'SetTimerResolution.lnk'));" ^
+  "$shortcut.TargetPath = 'C:\Windows\EvolveSetup\misc\SetTimerResolution.exe';" ^
+  "$shortcut.Arguments  = '--resolution 5070 --no-console';" ^
+  "$shortcut.WorkingDirectory = 'C:\Windows\EvolveSetup\misc';" ^
+  "$shortcut.Save()"
+
 @echo EvolveAppInstaller.bat
 color 0B
 title EvolveSetup - Please be patient!
