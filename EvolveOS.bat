@@ -1871,6 +1871,54 @@ ipconfig /flushdns >nul 2>&1
 @echo Disable Wake Devices
 for /f "tokens=*" %%a in ('powercfg /devicequery wake_armed 2^>nul') do powercfg /devicedisablewake "%%a" >nul 2>&1
 
+:: ====================================================================
+:: SECTION FINALE: KERNEL LATENCY PROFILE (ENEMY MATCH)
+:: ====================================================================
+
+@echo [1/4] Core Kernel Timing
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "ThreadDpcEnable" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "SerializeTimerExpiration" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "GlobalTimerResolutionRequests" /t REG_DWORD /d 1 /f >nul 2>&1
+
+@echo [2/4] Kernel Mitigation Flags
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "DisableControlFlowGuardXfg" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "DisableExceptionChainValidation" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "MitigationOptions" /t REG_BINARY ^
+    /d 222222222222222222222222222222222222222222222222 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "MitigationAuditOptions" /t REG_BINARY ^
+    /d 222222222222222222222222222222222222222222222222 /f >nul 2>&1
+
+@echo [3/4] Other Kernel Tweaks
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "CacheIsoBitmap" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "PowerOffFrozenProcessors" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "InterruptSteeringFlags" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "SeLpacEnableWatsonReporting" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "SeLpacEnableWatsonThrottling" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "EnableWerUserReporting" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "SchedulerAssistThreadFlagOverride" /t REG_DWORD /d 1 /f >nul 2>&1
+
+@echo [4/4] Remove Keys Only Your Build Sets
+reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "DisableTsx" /f >nul 2>&1
+reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
+    /v "TimerCheckFlags" /f >nul 2>&1
+
+
+
 @echo.
 echo EvolveOS configuration complete!
 
