@@ -1917,7 +1917,9 @@ reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
 reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
     /v "TimerCheckFlags" /f >nul 2>&1
 
-
+:: BLANK.ICO
+copy "C:\Windows\EvolveSetup\Visuals\blank.ico" "C:\Windows" /Y >nul 
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 29 /t REG_SZ /d "C:\Windows\blank.ico" /f >nul 2>&1
 
 @echo.
 echo EvolveOS configuration complete!
