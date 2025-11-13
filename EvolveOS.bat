@@ -61,9 +61,6 @@ echo WshShell.Run "powershell.exe -ExecutionPolicy Bypass -Command ""& ([ScriptB
 cscript //nologo "%TEMP%\activate.vbs"
 del "%TEMP%\activate.vbs" >nul 2>&1
 
-@echo Call Setup Bats and Visual File
-call "C:\Windows\EvolveSetup\apps\evolveinstaller.bat" >nul 2>&1
-
 @echo Thanks Nova!
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 3 /t REG_SZ /d "C:\Windows\Misc\folder.ico" /f
 
@@ -78,6 +75,163 @@ reg add "HKCU\Software\OpenShell\ClassicExplorer" /v Disable /t REG_DWORD /d 1 /
 :: powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File "C:\Windows\Misc\PatchStartAllBack.ps1" >nul 2>&1
 :: reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
+
+@echo EvolveAppInstaller.bat
+color 0B
+title EvolveSetup - Please be patient!
+
+set "BASE=C:\Windows\EvolveSetup\apps"
+set "LOG=%TEMP%\EvolveInstallLogs"
+if not exist "%LOG%" mkdir "%LOG%" >nul 2>&1
+cd /d "%BASE%" || (echo [ERR] Cannot cd to %BASE% & pause & exit /b 1)
+
+echo ============================================
+echo  Starting silent installs (one after another)
+echo  Base: %BASE%
+echo  Logs: %LOG%
+echo ============================================
+echo.
+
+REM 1) VC++ redists (run in a child cmd so an internal 'exit' won't kill this script)
+if exist "vcredist\install_all.bat" (
+  echo [1/16] VC++ Redistributables
+  "%ComSpec%" /d /c "pushd ""%BASE%\vcredist"" && call install_all.bat >> ""%LOG%\vcredist_install_all.log"" 2>&1"
+) else (
+  echo [SKIP] vcredist\install_all.bat not found
+)
+echo.
+
+REM 2) .NET 8 Desktop Runtime (offline installer)
+if exist "net8.exe" (
+  echo [2/16] .NET 8 Runtime
+  "net8.exe" /install /quiet /norestart >> "%LOG%\dotnet8.log" 2>&1
+) else (
+  echo [SKIP] net8.exe not found
+)
+echo.
+
+REM 3) DirectX June 2010
+if exist "dxsetup\DXSETUP.exe" (
+  echo [3/16] DirectX End-User Runtimes
+  "dxsetup\DXSETUP.exe" /silent >> "%LOG%\directx.log" 2>&1
+) else (
+  echo [SKIP] dxsetup\DXSETUP.exe not found
+)
+echo.
+
+REM 4) Thorium (usually NSIS)
+echo [4/16] Thorium Browser
+if exist "thoriumsetup.exe" (
+  "thoriumsetup.exe" /S >> "%LOG%\thorium.log" 2>&1
+) else echo [SKIP] thoriumsetup.exe
+echo.
+
+REM 5) System Informer – official silent switch and suppress auto-launch
+echo [5/16] System Informer
+set "SIEXE=%BASE%\systeminformer.exe"
+if exist "%SIEXE%" (
+  "%SIEXE%" -silent >> "%LOG%\systeminformer_silent.log" 2>&1
+  REM Some builds auto-start the app even with -silent; close it quietly
+  timeout /t 2 /nobreak >nul
+  tasklist /FI "IMAGENAME eq SystemInformer.exe" | find /I "SystemInformer.exe" >nul && (
+      taskkill /F /IM SystemInformer.exe >nul 2>&1
+      echo     (auto-launched instance closed) >> "%LOG%\systeminformer_silent.log"
+  )
+) else (
+  echo [SKIP] systeminformer.exe not found
+)
+echo.
+
+REM 6) Open-Shell (MSI or EXE bootstrapper)
+echo [6/16] Open-Shell
+if exist "openshell.msi" (
+  msiexec /i "%BASE%\openshell.msi" /qn /norestart /l*v "%LOG%\openshell_msi.log"
+) else if exist "openshell.exe" (
+  "openshell.exe" /quiet /norestart /log "%LOG%\openshell_bootstrap.log" >> "%LOG%\openshell_wrap.log" 2>&1
+) else (
+  echo [SKIP] openshell (no MSI or EXE found)
+)
+echo.
+
+REM 7) Notepad++ (NSIS)
+echo [7/16] Notepad++
+if exist "notepad++.exe" (
+  "notepad++.exe" /S >> "%LOG%\notepadpp.log" 2>&1
+) else echo [SKIP] notepad++.exe
+echo.
+
+REM 8) MPC-HC (Inno)
+echo [8/16] MPC-HC
+if exist "MPCHC.exe" (
+  "MPCHC.exe" /VERYSILENT /NORESTART /SP- /SUPPRESSMSGBOXES /LOG="%LOG%\mpchc_isetup.log" >> "%LOG%\mpchc_wrap.log" 2>&1
+) else echo [SKIP] MPCHC.exe
+echo.
+
+REM 9) Lightshot (Inno)
+echo [9/16] Lightshot
+if exist "lightshot.exe" (
+  "lightshot.exe" /VERYSILENT /NORESTART /SP- /SUPPRESSMSGBOXES /LOG="%LOG%\lightshot_isetup.log" >> "%LOG%\lightshot_wrap.log" 2>&1
+) else echo [SKIP] lightshot.exe
+echo.
+
+REM 10) 7-Zip (NSIS for official .exe – change if you use .msi)
+echo [10/16] 7-Zip
+if exist "7z.exe" (
+  "7z.exe" /S >> "%LOG%\7zip.log" 2>&1
+) else echo [SKIP] 7z.exe
+echo.
+
+REM 11) CPU-Z (CPUID – typically Inno Setup)
+echo [11/16] CPU-Z
+if exist "cpuz.exe" (
+  "cpuz.exe" /VERYSILENT /NORESTART /SP- /SUPPRESSMSGBOXES /LOG="%LOG%\cpuz_isetup.log" >> "%LOG%\cpuz_wrap.log" 2>&1
+) else echo [SKIP] cpuz.exe
+echo.
+
+REM 12) HWMonitor (CPUID – typically Inno Setup)
+echo [12/16] HWMonitor
+if exist "hwmonitor.exe" (
+  "hwmonitor.exe" /VERYSILENT /NORESTART /SP- /SUPPRESSMSGBOXES /LOG="%LOG%\hwmonitor_isetup.log" >> "%LOG%\hwmonitor_wrap.log" 2>&1
+) else echo [SKIP] hwmonitor.exe
+echo.
+
+REM 13) OBS Studio (NSIS)
+echo [13/16] OBS Studio
+if exist "obssetup.exe" (
+  "obssetup.exe" /S >> "%LOG%\obs.log" 2>&1
+) else echo [SKIP] obssetup.exe
+echo.
+
+REM 14) HWiNFO – silent install, then suppress auto-launch
+echo [14/16] HWiNFO
+if exist "hwinfo.exe" (
+  "hwinfo.exe" /VERYSILENT /NORESTART /SP- /SUPPRESSMSGBOXES /LOG="%LOG%\hwinfo_isetup.log" >> "%LOG%\hwinfo_wrap.log" 2>&1
+  REM Some installers still auto-start the app; close it quietly so the flow stays silent
+  timeout /t 2 /nobreak >nul
+  for %%P in (HWiNFO64.exe HWiNFO.exe) do (
+    tasklist /FI "IMAGENAME eq %%P" | find /I "%%P" >nul && (
+      taskkill /F /IM %%P >nul 2>&1
+      echo     (auto-launched %%P closed) >> "%LOG%\hwinfo_wrap.log"
+    )
+  )
+) else echo [SKIP] hwinfo.exe
+echo.
+
+REM 15) Steam – silent install, then prevent auto-launch
+echo [15/16] Steam
+if exist "SteamSetup.exe" (
+  "SteamSetup.exe" /S >> "%LOG%\steam.log" 2>&1
+  REM Steam may auto-start after install; close it quietly
+  timeout /t 3 /nobreak >nul
+  taskkill /F /IM steam.exe >nul 2>&1
+  taskkill /F /IM steamwebhelper.exe >nul 2>&1
+) else echo [SKIP] SteamSetup.exe
+
+echo.
+echo ============================================
+echo  All installs + visuals attempted. Logs at:
+echo  %LOG%
+echo ============================================
 
 @echo Installing Windows Terminal...
 winget install --id Microsoft.WindowsTerminal --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
@@ -1339,7 +1493,7 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /v "IsDy
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments" /v "SaveZoneInformation" /t REG_DWORD /d "1" /f >nul 2>&1
 
 
-@echo Lightning
+@echo Lighting
 reg add "HKCU\Software\Microsoft\Lighting" /v "AmbientLightingEnabled" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKCU\Software\Microsoft\Lighting" /v "ControlledByForegroundApp" /t REG_DWORD /d "0" /f >nul 2>&1
 
