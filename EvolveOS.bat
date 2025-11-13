@@ -278,12 +278,10 @@ powershell -Command "$code = '[DllImport(\"user32.dll\", CharSet=CharSet.Auto)]p
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\taskmgr.exe" /v Debugger /t REG_SZ /d "\"C:\Program Files\SystemInformer\SystemInformer.exe\"" /f >nul 2>&1
 
 @echo Fix OpenShell Bug 
-reg export "HKLM\SOFTWARE\Microsoft\Internet Explorer\Toolbar" "%USERPROFILE%\Desktop\IE_Toolbar_HKLM.reg" /y
-reg export "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Toolbar" "%USERPROFILE%\Desktop\IE_Toolbar_HKLM_WOW64.reg" /y
-reg export "HKCU\Software\Microsoft\Internet Explorer\Toolbar\ShellBrowser" "%USERPROFILE%\Desktop\IE_Toolbar_ShellBrowser_HKCU.reg" /y
-reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f
-reg delete "HKCU\Software\Microsoft\Internet Explorer\Toolbar\ShellBrowser" /v "ITBar7Layout" /f
+reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f >nul 2>&1
+reg delete "HKCU\Software\Microsoft\Internet Explorer\Toolbar\ShellBrowser" /v "ITBar7Layout" /f >nul 2>&1
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowStatusBar" /t REG_DWORD /d 0 /f >nul 2>&1
 
 :: ====================================================================
 :: SECTION 3: POWERSHELL CONFIGURATION
