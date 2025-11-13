@@ -65,7 +65,12 @@ del "%TEMP%\activate.vbs" >nul 2>&1
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 3 /t REG_SZ /d "C:\Windows\Misc\folder.ico" /f
 
 @echo Fix OpenShell Bug 
-reg add "HKCU\Software\OpenShell\ClassicExplorer" /v Disable /t REG_DWORD /d 1 /f >nul 2>&1
+reg export "HKLM\SOFTWARE\Microsoft\Internet Explorer\Toolbar" "%USERPROFILE%\Desktop\IE_Toolbar_HKLM.reg" /y
+reg export "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Toolbar" "%USERPROFILE%\Desktop\IE_Toolbar_HKLM_WOW64.reg" /y
+reg export "HKCU\Software\Microsoft\Internet Explorer\Toolbar\ShellBrowser" "%USERPROFILE%\Desktop\IE_Toolbar_ShellBrowser_HKCU.reg" /y
+reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f
+reg delete "HKCU\Software\Microsoft\Internet Explorer\Toolbar\ShellBrowser" /v "ITBar7Layout" /f
 
 :: ====================================================================
 :: SECTION 2: TOOL INSTALLATION
@@ -256,8 +261,11 @@ winget install --id Microsoft.WindowsTerminal --silent --accept-source-agreement
 @echo Installing Visual Studio Code...
 winget install --id Microsoft.VisualStudioCode --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /MERGETASKS=!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath" >nul 2>&1
 
-@echo Installing Discord...
-winget install --id Discord.Discord --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
+:: @echo Installing Discord...
+:: winget install --id Discord.Discord --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
+
+@echo Install Discord
+"C:\Windows\Misc\DiscordSetup.exe" -s
 
 @echo Creating Desktop Shortcut to Evolve App Installer...
 powershell -Command ^
