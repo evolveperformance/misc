@@ -64,6 +64,9 @@ del "%TEMP%\activate.vbs" >nul 2>&1
 @echo Call Setup Bats and Visual File
 call "C:\Windows\EvolveSetup\apps\evolveinstaller.bat" >nul 2>&1
 
+@echo Thanks Nova!
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 3 /t REG_SZ /d "C:\Windows\Misc\folder.ico" /f
+
 @echo Fix OpenShell Bug 
 reg add "HKCU\Software\OpenShell\ClassicExplorer" /v Disable /t REG_DWORD /d 1 /f >nul 2>&1
 
