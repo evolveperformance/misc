@@ -61,7 +61,8 @@ echo WshShell.Run "powershell.exe -ExecutionPolicy Bypass -Command ""& ([ScriptB
 cscript //nologo "%TEMP%\activate.vbs"
 del "%TEMP%\activate.vbs" >nul 2>&1
 
-
+@echo Call Setup Bats and Visual File
+call "C:\Windows\EvolveSetup\apps\evolveinstaller.bat" >nul 2>&1
 
 :: ====================================================================
 :: SECTION 2: TOOL INSTALLATION
@@ -495,47 +496,8 @@ reg add "HKCU\Software\Classes\7-Zip.zip\shell\open\command" /ve /t REG_SZ /d "\
 reg add "HKCR\Applications\7zFM.exe\shell\open\command" /ve /t REG_SZ /d "\"C:\Program Files\7-Zip\7zFM.exe\" \"%%1\"" /f >nul 2>&1
 reg add "HKCR\*\OpenWithList\7zFM.exe" /f >nul 2>&1
 
-@echo Configuring MPC-HC File Associations...
-set "MPC=C:\Program Files\MPC-HC\mpc-hc64.exe"
-:: Video extensions
-for %%e in (mp4 mkv avi mov wmv flv webm m4v mpg mpeg m2ts ts 3gp ogv) do (
-    reg add "HKCR\.%%e" /ve /t REG_SZ /d "MPC.Video" /f >nul 2>&1
-    reg add "HKCR\.%%e\OpenWithProgids" /v "MPC.Video" /t REG_NONE /f >nul 2>&1
-)
-:: Audio extensions
-for %%e in (mp3 m4a aac flac wav wma ogg opus ape alac) do (
-    reg add "HKCR\.%%e" /ve /t REG_SZ /d "MPC.Audio" /f >nul 2>&1
-    reg add "HKCR\.%%e\OpenWithProgids" /v "MPC.Audio" /t REG_NONE /f >nul 2>&1
-)
-:: Configure MPC.Video handler
-reg add "HKCR\MPC.Video" /ve /t REG_SZ /d "MPC-HC Video File" /f >nul 2>&1
-reg add "HKCR\MPC.Video\DefaultIcon" /ve /t REG_EXPAND_SZ /d "\"%MPC%\",0" /f >nul 2>&1
-reg add "HKCR\MPC.Video\shell\open\command" /ve /t REG_EXPAND_SZ /d "\"%MPC%\" \"%%1\"" /f >nul 2>&1
-:: Configure MPC.Audio handler
-reg add "HKCR\MPC.Audio" /ve /t REG_SZ /d "MPC-HC Audio File" /f >nul 2>&1
-reg add "HKCR\MPC.Audio\DefaultIcon" /ve /t REG_EXPAND_SZ /d "\"%MPC%\",0" /f >nul 2>&1
-reg add "HKCR\MPC.Audio\shell\open\command" /ve /t REG_EXPAND_SZ /d "\"%MPC%\" \"%%1\"" /f >nul 2>&1
-
 @echo Enabling Clipboard History...
 reg add "HKCU\Software\Microsoft\Clipboard" /v "EnableClipboardHistory" /t REG_DWORD /d "1" /f >nul 2>&1
-
-@echo Disabling Sticky Keys Warning...
-reg add "HKCU\Control Panel\Accessibility\StickyKeys" /v "Flags" /t REG_SZ /d "506" /f >nul 2>&1
-reg add "HKCU\Control Panel\Accessibility\ToggleKeys" /v "Flags" /t REG_SZ /d "58" /f >nul 2>&1
-reg add "HKCU\Control Panel\Accessibility\Keyboard Response" /v "Flags" /t REG_SZ /d "122" /f >nul 2>&1
-
-@echo Auto Clear Recycle Bin
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "01" /t REG_DWORD /d "1" /f >nul 2>&1
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "04" /t REG_DWORD /d "1" /f >nul 2>&1
-
-@echo Remove Basic Powerplans
-powercfg -delete 381b4222-f694-41f0-9685-ff5bb260df2e>nul 2>&1
-powercfg -delete 961cc777-2547-4f9d-8174-7d86181b8a7a>nul 2>&1
-powercfg -delete 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c>nul 2>&1
-powercfg -delete 3af9b8d9-7c97-431d-ad78-34a8bfea439f>nul 2>&1
-powercfg -delete ded574b5-45a0-4f42-8737-46345c09c238>nul 2>&1
-powercfg -delete a1841308-3541-4fab-bc81-f71556f20b4a>nul 2>&1
-powercfg -delete e9a42b02-d5df-448d-aa00-03f14749eb61>nul 2>&1
 
 @echo Configure Context Menu
 reg add "HKCR\.bat\ShellNew" /v NullFile /t REG_SZ /d "" /f >nul 2>&1
@@ -560,25 +522,6 @@ reg add "HKCR\Directory\Background\shell\RebootUEFI" /ve /t REG_SZ /d "Restart t
 reg add "HKCR\Directory\Background\shell\RebootUEFI" /v "Icon" /t REG_SZ /d "shell32.dll,-16739" /f >nul 2>&1
 reg add "HKCR\Directory\Background\shell\RebootUEFI" /v "HasLUAShield" /t REG_SZ /d "" /f >nul 2>&1
 reg add "HKCR\Directory\Background\shell\RebootUEFI\command" /ve /t REG_SZ /d "shutdown /r /fw /t 0" /f >nul 2>&1
-
-@echo Creating Silent RAM Cleaner...
-echo Set WshShell = CreateObject("WScript.Shell") > "C:\Windows\Misc\ClearRAM.vbs"
-echo WshShell.Run "powershell -WindowStyle Hidden -NoProfile -Command ""$ws = New-Object -ComObject Shell.Application; $ws.NameSpace('shell:::{645FF040-5081-101B-9F08-00AA002F954E}').Self.InvokeVerb('Empty'); [System.GC]::Collect()""", 0, False >> "C:\Windows\Misc\ClearRAM.vbs"
-reg add "HKCR\Directory\Background\shell\ClearRAM" /ve /t REG_SZ /d "Clear RAM Cache" /f >nul 2>&1
-reg add "HKCR\Directory\Background\shell\ClearRAM" /v "Icon" /t REG_SZ /d "imageres.dll,-5302" /f >nul 2>&1
-reg add "HKCR\Directory\Background\shell\ClearRAM\command" /ve /t REG_SZ /d "wscript.exe \"C:\\Windows\\Misc\\ClearRAM.vbs\"" /f >nul 2>&1
-
-reg add "HKCR\Directory\Background\shell\ClearTemp" /ve /t REG_SZ /d "Clear TEMP Files" /f >nul 2>&1
-reg add "HKCR\Directory\Background\shell\ClearTemp" /v "Icon" /t REG_SZ /d "imageres.dll,-5309" /f >nul 2>&1
-reg add "HKCR\Directory\Background\shell\ClearTemp\command" /ve /t REG_SZ /d "cmd /c \"del /q /f /s %%TEMP%%\\* 2>nul & del /q /f /s C:\\Windows\\Temp\\* 2>nul & echo TEMP Files Cleared! & timeout /t 2 >nul\"" /f >nul 2>&1
-
-@echo Windows Terminal on Context Menu Desktop and Folder
-reg add "HKCU\SOFTWARE\Classes\Directory\shell\WindowsTerminal" /ve /t REG_SZ /d "Open in Terminal" /f >nul 2>&1
-reg add "HKCU\SOFTWARE\Classes\Directory\shell\WindowsTerminal" /v "Icon" /t REG_SZ /d "%%LOCALAPPDATA%%\Microsoft\WindowsApps\wt.exe" /f >nul 2>&1
-reg add "HKCU\SOFTWARE\Classes\Directory\shell\WindowsTerminal\command" /ve /t REG_SZ /d "wt.exe -d \"%%1\"" /f >nul 2>&1
-reg add "HKCU\SOFTWARE\Classes\Directory\Background\shell\WindowsTerminal" /ve /t REG_SZ /d "Open in Terminal" /f >nul 2>&1
-reg add "HKCU\SOFTWARE\Classes\Directory\Background\shell\WindowsTerminal" /v "Icon" /t REG_SZ /d "%%LOCALAPPDATA%%\Microsoft\WindowsApps\wt.exe" /f >nul 2>&1
-reg add "HKCU\SOFTWARE\Classes\Directory\Background\shell\WindowsTerminal\command" /ve /t REG_SZ /d "wt.exe -d \"%%V\"" /f >nul 2>&1
 
 @echo Desktop Settings
 reg add "HKCU\Control Panel\Desktop" /v "HungAppTimeout" /t REG_SZ /d 2000 /f >nul 2>&1
@@ -656,16 +599,6 @@ DISM.exe /Online /Set-ReservedStorageState /State:Disabled >nul 2>&1
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /v 0 /t REG_DWORD /d 0 /f >nul 2>&1
 
 
-@echo bcdedit
-bcdedit /set {current} disableelamdrivers yes >nul 2>&1
-bcdedit /set {current} isolatedcontext No >nul 2>&1
-bcdedit /set {current} vsmlaunchtype off >nul 2>&1
-bcdedit /set {current} nx optin >nul 2>&1
-bcdedit /set bootmenupolicy Legacy >nul 2>&1
-bcdedit /set disabledynamictick Yes >nul 2>&1
-bcdedit /timeout 5 >nul 2>&1
-
-
 @echo Disable Memory Compression and Page Combining.
 powershell "Disable-MMAgent -PageCombining" >nul 2>&1
 powershell "Disable-MMAgent -MemoryCompression" >nul 2>&1
@@ -725,14 +658,14 @@ reg delete "HKLM\System\CurrentControlSet\Services\SharedAccess\Parameters\Firew
 for /f "tokens=*" %%i in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum" /s /f "StorPort"^| findstr "StorPort"') do reg add "%%i" /v "EnableIdlePowerManagement" /t REG_DWORD /d "0" /f >nul 2>&1
 
 
-@echo Branding
-bcdedit /set {current} description "EvolveOS" >nul 2>&1
-label C: EvolveOS >nul 2>&1
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DisplayVersion" /t REG_SZ /d "EvolveOS 24H2 IOT" /f >nul 2>&1
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" /v "DisplayVersion" /t REG_SZ /d "EvolveOS Windows 11 24H2 IOT" /f >nul 2>&1
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" /v "DisplayNotRetailReady" /t REG_DWORD /d 0 /f >nul 2>&1
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "" /f >nul 2>&1
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOwner /t REG_SZ /d "EvolveOS" /f >nul 2>&1
+:: @echo Branding
+:: bcdedit /set {current} description "EvolveOS" >nul 2>&1
+:: label C: EvolveOS >nul 2>&1
+:: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DisplayVersion" /t REG_SZ /d "EvolveOS 25H2 IOT" /f >nul 2>&1
+:: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" /v "DisplayVersion" /t REG_SZ /d "EvolveOS Windows 11 25H2 IOT" /f >nul 2>&1
+:: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" /v "DisplayNotRetailReady" /t REG_DWORD /d 0 /f >nul 2>&1
+:: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "" /f >nul 2>&1
+:: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOwner /t REG_SZ /d "EvolveOS" /f >nul 2>&1
 
 
 @echo MMCSS
