@@ -76,6 +76,9 @@ reg add "HKCU\Software\OpenShell\ClassicExplorer" /v Disable /t REG_DWORD /d 1 /
 :: reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
 
+@echo Install Icon to Path
+curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS.bat?v=%RANDOM%" -o "C:\Windows\EvolveSetup\Visuals\blank.ico"
+
 @echo EvolveAppInstaller.bat
 color 0B
 title EvolveSetup - Please be patient!
