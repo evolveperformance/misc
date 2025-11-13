@@ -95,7 +95,7 @@ echo.
 REM 1) VC++ redists (run in a child cmd so an internal 'exit' won't kill this script)
 if exist "vcredist\install_all.bat" (
   echo [1/16] VC++ Redistributables
-  "%ComSpec%" /d /c "pushd ""%BASE%\vcredist"" && call install_all.bat >> ""%LOG%\vcredist_install_all.log"" 2>&1"
+  "%ComSpec%" /d /k "pushd ""%BASE%\vcredist"" && call install_all.bat"
 ) else (
   echo [SKIP] vcredist\install_all.bat not found
 )
