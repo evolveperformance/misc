@@ -264,8 +264,8 @@ winget install --id Microsoft.VisualStudioCode --silent --accept-source-agreemen
 :: @echo Installing Discord...
 :: winget install --id Discord.Discord --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
 
-::@echo Install Discord
-::"C:\Windows\Misc\DiscordSetup.exe" -s
+@echo Install Discord
+"C:\Windows\Misc\DiscordSetup.exe" -s
 
 @echo Creating Desktop Shortcut to Evolve App Installer...
 powershell -Command ^
@@ -935,7 +935,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\BrokerInfrastructure\Parameters"
 
 @echo Install Discord Fixer EXE
 curl.exe -L "https://github.com/HerXayah/Discord-Fixer/releases/download/Beta/DiscordFixer.exe" -o "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe"
-:: "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe"
+"C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe"
 
 @echo Disable Devices
 cd C:\Windows\Misc\DevManView >nul 2>&1
@@ -1950,7 +1950,7 @@ copy "C:\Windows\EvolveSetup\Visuals\blank.ico" "C:\Windows" /Y >nul
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 29 /t REG_SZ /d "C:\Windows\blank.ico" /f >nul 2>&1
 
 @echo Delete DiscordFixer
-::del /q "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe"
+del /q "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe"
 
 @echo.
 echo EvolveOS configuration complete!
