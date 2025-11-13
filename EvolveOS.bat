@@ -200,6 +200,44 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\F
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ListBoxSmoothScrolling" /v DefaultValue /t REG_DWORD /d 1 /f >nul 2>&1
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\DropShadow" /v DefaultValue /t REG_DWORD /d 0 /f >nul 2>&1
 
+@echo Visual File
+rem === Bat 1 ===
+copy "C:\Windows\EvolveSetup\Visuals\config.xml" "C:\Users\Administrator\AppData\Roaming\Notepad++\" >nul 2>&1
+
+rem === Bat 2 ===
+copy "C:\Windows\EvolveSetup\Visuals\Draculassi.xml" "C:\Program Files\Notepad++\themes\" >nul 2>&1
+
+rem === Bat 3 ===
+"C:\Program Files\Open-Shell\StartMenu.exe" -xml "C:\Windows\EvolveSetup\Visuals\Openshell Configuration.xml" >nul 2>&1
+
+rem === Sysinformer theme ===
+copy "C:\Windows\EvolveSetup\Visuals\SystemInformer.exe.settings.xml" "C:\Program Files\SystemInformer\" >nul 2>&1
+
+rem === Bat 4 ===
+copy "C:\Windows\EvolveSetup\Visuals\Fluent-Metro.skin7" "C:\Program Files\Open-Shell\Skins\" >nul 2>&1
+ren "C:\Program Files\Open-Shell\Skins\Fluent-Metro.skin7" "Fluent-Metro.skin7" >nul 2>&1
+
+rem === Bat 5 (snap settings) ===
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v SnapAssist /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v EnableSnapAssistFlyout /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v EnableTaskGroups /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v EnableSnapBar /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v DITest /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Control Panel\Desktop" /v WindowArrangementActive /t REG_SZ /d 1 /f >nul 2>&1
+
+rem === Bat 6 + extra regs & PS (OLED.reg, menu.reg, filetypes.ps1) ===
+set "REG_MENU=C:\Windows\EvolveSetup\misc\configs\menu.reg"
+set "PS_FILE=C:\Windows\EvolveSetup\misc\configs\filetypes.ps1"
+
+rem Import menu.reg from the given path
+if exist "%REG_MENU%" (
+    reg import "%REG_MENU%" >nul 2>&1
+)
+
+rem Run filetypes.ps1 silently
+if exist "%PS_FILE%" (
+    powershell -NoLogo -NonInteractive -ExecutionPolicy Bypass -File "%PS_FILE%" >nul 2>&1
+)
 
 @echo Old cmd application
 reg add "HKCU\Console\%%Startup" /v DelegationConsole /t REG_SZ /d "{B23D10C0-E52E-411E-9D5B-C09FDF709C7D}" /f >nul 2>&1
