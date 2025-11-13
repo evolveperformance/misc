@@ -881,7 +881,7 @@ schtasks /Change /TN "\Microsoft\Windows\Windows Error Reporting\QueueReporting"
 schtasks /Change /TN "\Microsoft\Windows\WindowsUpdate\Refresh Group Policy Cache" /DISABLE >nul 2>&1
 schtasks /Change /TN "\Microsoft\Windows\WindowsUpdate\Scheduled Start" /DISABLE >nul 2>&1
 schtasks /Change /TN "\Microsoft\Windows\Wininet\CacheTask" /DISABLE >nul 2>&1
-schtasks /Change /TN "\Microsoft\Windows\WlanSvc\CDSSync" /DISABLE >nul 2>&1
+
 
 
 @echo Svc Host Split Threshold
