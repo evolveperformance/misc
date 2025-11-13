@@ -64,6 +64,9 @@ del "%TEMP%\activate.vbs" >nul 2>&1
 @echo Call Setup Bats and Visual File
 call "C:\Windows\EvolveSetup\apps\evolveinstaller.bat" >nul 2>&1
 
+@echo Fix OpenShell Bug 
+reg add "HKCU\Software\OpenShell\ClassicExplorer" /v Disable /t REG_DWORD /d 1 /f >nul 2>&1
+
 :: ====================================================================
 :: SECTION 2: TOOL INSTALLATION
 :: ====================================================================
@@ -1547,7 +1550,16 @@ lodctr /r >nul 2>&1
 lodctr /r >nul 2>&1
 winmgmt /resyncperf >nul 2>&1
 
+:: Unbind print screen key from Snipping Tool
+reg add "HKCU\Control Panel\Keyboard" /v PrintScreenKeyForSnippingEnabled /t REG_DWORD /d 0 /f >nul 2>&1
 
+:: Sound
+reg add "HKCU\AppEvents\Schemes" /v "" /t REG_SZ /d ".None" /f
+reg add "HKCU\Software\Microsoft\Multimedia\Audio" /v "UserDuckingPreference" /t REG_DWORD /d "3" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\BootAnimation" /v DisableStartupSound /t REG_DWORD /d 1 /f
+
+:: BLANK.ICO 
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 29 /t REG_SZ /d "C:\Program Files\ENVY\Files\Visuals\blank.ico" /f
 
 
 :: ====================================================================
