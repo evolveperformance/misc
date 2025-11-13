@@ -68,22 +68,9 @@ del "%TEMP%\activate.vbs" >nul 2>&1
 :: ====================================================================
 
 @echo Installing Essential Tools...
-Call "C:\Windows\Misc\VisualCRuntimes\install_all.bat" >nul 2>&1
-"C:\Windows\Misc\DirectX\DX.exe" /silent >nul 2>&1
-"C:\Windows\Misc\7z2501-x64.exe" /S >nul 2>&1
-"C:\Windows\Misc\MPC-HC.2.5.5.x64.exe" /VERYSILENT /NORESTART >nul 2>&1
-"C:\Windows\Misc\StartAllBackSetup.exe" /silent /allusers >nul 2>&1
-powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File "C:\Windows\Misc\PatchStartAllBack.ps1" >nul 2>&1
-reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
+:: powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File "C:\Windows\Misc\PatchStartAllBack.ps1" >nul 2>&1
+:: reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
-
-:: "C:\Windows\Misc\openshell.exe" /quiet /norestart >nul 2>&1
-:: copy /Y "C:\Windows\Misc\Draculassi Open-Shell Theme.skin7" "C:\Program Files\Open-Shell\Skins\" >nul 2>&1
-:: copy /Y "C:\Windows\Misc\Draculassi Open-Shell Config.xml" "C:\Program Files\Open-Shell\" >nul 2>&1
-:: ren "C:\Program Files\Open-Shell\Skins\Draculassi Open-Shell Theme.skin7" "Fluent-Metro.skin7" >nul 2>&1
-:: "C:\Program Files\Open-Shell\StartMenu.exe" -xml "C:\Program Files\Open-Shell\Draculassi Open-Shell Config.xml" >nul 2>&1
-:: reg import "C:\Windows\Misc\OLED Theme.reg" >nul 2>&1
-
 
 @echo Installing Windows Terminal...
 winget install --id Microsoft.WindowsTerminal --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
@@ -93,10 +80,6 @@ winget install --id Microsoft.VisualStudioCode --silent --accept-source-agreemen
 
 @echo Installing Discord...
 winget install --id Discord.Discord --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
-
-@echo Install .NET 8
-"C:\Windows\Misc\NET 8.exe" /install /quiet /norestart >nul 2>&1
-
 
 @echo Creating Desktop Shortcut to Evolve App Installer...
 powershell -Command ^
@@ -512,27 +495,6 @@ reg add "HKCU\Software\Classes\7-Zip.zip\shell\open\command" /ve /t REG_SZ /d "\
 reg add "HKCR\Applications\7zFM.exe\shell\open\command" /ve /t REG_SZ /d "\"C:\Program Files\7-Zip\7zFM.exe\" \"%%1\"" /f >nul 2>&1
 reg add "HKCR\*\OpenWithList\7zFM.exe" /f >nul 2>&1
 
-@echo Configure .nip
-reg add "HKLM\SOFTWARE\Classes\.nip" /v "FriendlyTypeName" /t REG_SZ /d "nvidiaProfileInspector Profile" /f >nul 2>&1
-reg add "HKLM\SOFTWARE\Classes\.nip" /ve /t REG_SZ /d "nvidiaProfileInspector Profile" /f >nul 2>&1
-reg add "HKCR\.nip\Shell" /ve /t REG_SZ /d "Import" /f >nul 2>&1
-reg add "HKCR\.nip\Shell\Import\Command" /ve /t REG_EXPAND_SZ /d "\"C:\Windows\Misc\nvidiaprofileinspector.exe\" \"%%1\"" /f >nul 2>&1
-reg add "HKCR\.nip\DefaultIcon" /ve /t REG_EXPAND_SZ /d "C:\Windows\Misc\nvidiaprofileinspector.exe,0" /f >nul 2>&1
-
-@echo Configure .pow
-reg add "HKCR\.pow" /ve /t REG_SZ /d "Power Plan" /f >nul 2>&1
-reg add "HKCR\.pow" /v "FriendlyTypeName" /t REG_SZ /d "Power Plan" /f >nul 2>&1
-reg add "HKCR\.pow\DefaultIcon" /ve /t REG_EXPAND_SZ /d "%%SystemRoot%%\System32\powercfg.cpl,-202" /f >nul 2>&1
-reg add "HKCR\.pow\shell\Import\command" /ve /t REG_SZ /d "powercfg /import \"%%1\"" /f >nul 2>&1#
-
-@echo Configure .ps1
-reg add "HKLM\SOFTWARE\Classes\.ps1" /v "" /t REG_SZ /d "Microsoft.PowerShellScript.1" /f 
-reg add "HKLM\SOFTWARE\Classes\.ps1\DefaultIcon" /v "" /t REG_SZ /d "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\"" /f
-reg add "HKLM\SOFTWARE\Classes\.ps1\shell" /f 
-reg add "HKLM\SOFTWARE\Classes\.ps1\shell\Import" /f
-reg add "HKLM\SOFTWARE\Classes\.ps1\shell\Import\command" /v "" /t REG_SZ /d "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" /f
-reg add "HKCR\.ps1\DefaultIcon" /ve /t REG_EXPAND_SZ /d "C:\Windows\SysWOW64\WindowsPowerShell\v1.0" /f >nul 2>&1
-
 @echo Configuring MPC-HC File Associations...
 set "MPC=C:\Program Files\MPC-HC\mpc-hc64.exe"
 :: Video extensions
@@ -574,13 +536,6 @@ powercfg -delete 3af9b8d9-7c97-431d-ad78-34a8bfea439f>nul 2>&1
 powercfg -delete ded574b5-45a0-4f42-8737-46345c09c238>nul 2>&1
 powercfg -delete a1841308-3541-4fab-bc81-f71556f20b4a>nul 2>&1
 powercfg -delete e9a42b02-d5df-448d-aa00-03f14749eb61>nul 2>&1
-
-
-@echo Download and Import Power Plan
-curl -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS.pow" -o "%TEMP%\EvolveOS.pow" >nul 2>&1
-powercfg -import "%TEMP%\EvolveOS.pow" 69696969-6969-6969-6969-696969696969
-powercfg -setactive 69696969-6969-6969-6969-696969696969
-del /f /q "%TEMP%\EvolveOS.pow" >nul 2>&1
 
 @echo Configure Context Menu
 reg add "HKCR\.bat\ShellNew" /v NullFile /t REG_SZ /d "" /f >nul 2>&1
@@ -726,12 +681,6 @@ reg add "HKCU\System\GameConfigStore" /v "GameDVR_DXGIHonorFSEWindowsCompatible"
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_EFSEFeatureFlags" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehaviorMode" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_HonorUserFSEBehaviorMode" /t REG_DWORD /d "1" /f >nul 2>&1
-
-
-@echo Powerplan
-powercfg -delete a1841308-3541-4fab-bc81-f71556f20b4a >nul 2>&1
-powercfg -delete 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c >nul 2>&1
-powercfg -delete 381b4222-f694-41f0-9685-ff5bb260df2e >nul 2>&1
 
 
 @echo Drive
@@ -1466,6 +1415,9 @@ reg add "HKCU\Software\Sysinternals\AutoRuns" /v VerifyCodeSignatures /t REG_DWO
 @echo Disable Windows Store Auto Download
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsStore" /v "AutoDownload" /t REG_DWORD /d "2" /f >nul 2>&1
 
+@echo Taskbar Widgets off
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarDa /t REG_DWORD /d 0 /f >nul 2>&1
+
 @echo Exclude Driver Updates in Quality Updates
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ExcludeWUDriversInQualityUpdate" /t REG_DWORD /d "1" /f >nul 2>&1
 
@@ -2013,6 +1965,8 @@ echo All optimizations have been applied successfully.
 @echo Restarting Windows Explorer...
 start explorer.exe
 timeout /t 3 /nobreak >nul
+
+echo EvolveOS setup completed successfully at %date% %time% > "%USERPROFILE%\Desktop\EVOLVEOS_DONE.txt"
 
 echo.
 echo Returning to launcher...
