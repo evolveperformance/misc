@@ -97,6 +97,8 @@ reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "C:\Windows\Web\W
 reg add "HKCU\Control Panel\Desktop" /v WallpaperStyle /t REG_SZ /d 10 /f
 powershell -Command "$code = '[DllImport(\"user32.dll\", CharSet=CharSet.Auto)]public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);'; $type = Add-Type -MemberDefinition $code -Name WallpaperUtil -Namespace Win32 -PassThru; $type::SystemParametersInfo(0x0014, 0, 'C:\Windows\Web\Wallpaper\EvolveBackground.png', 0x03)"
 
+@echo Fix SystemInformer TaskManager
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\taskmgr.exe" /v Debugger /t REG_SZ /d "\"C:\Program Files\SystemInformer\SystemInformer.exe\"" /f >nul 2>&1
 
 :: ====================================================================
 :: SECTION 3: POWERSHELL CONFIGURATION
