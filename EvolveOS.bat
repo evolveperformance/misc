@@ -931,9 +931,9 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\BrokerInfrastructure\Parameters"
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\BrokerInfrastructure\Parameters" /v "GlobalCoalesceMaxAdditionalTasksPerWake" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\BrokerInfrastructure\Parameters" /v "GlobalCoalesceMaxEarlyFireWindowMs" /t REG_DWORD /d "0" /f >nul 2>&1
 
-@echo Install Discord Fixer EXE
-curl.exe -L "https://github.com/HerXayah/Discord-Fixer/releases/download/Beta/DiscordFixer.exe" -o "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe" >nul 2>&1
-start "" "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe" >nul 2>&1
+:: @echo Install Discord Fixer EXE
+:: curl.exe -L "https://github.com/HerXayah/Discord-Fixer/releases/download/Beta/DiscordFixer.exe" -o "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe" >nul 2>&1
+:: start "" "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe" >nul 2>&1
 
 @echo Disable Devices
 cd C:\Windows\Misc\DevManView >nul 2>&1
@@ -1952,8 +1952,8 @@ reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
 copy "C:\Windows\EvolveSetup\Visuals\blank.ico" "C:\Windows" /Y >nul 
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 29 /t REG_SZ /d "C:\Windows\blank.ico" /f >nul 2>&1
 
-@echo Delete DiscordFixer
-del /q "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe"
+:: @echo Delete DiscordFixer
+:: del /q "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe"
 
 @echo.
 echo EvolveOS configuration complete!
