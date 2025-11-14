@@ -257,7 +257,7 @@ winget install --id Microsoft.VisualStudioCode --silent --accept-source-agreemen
 :: winget install --id Discord.Discord --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
 
 @echo Install Discord
-"C:\Windows\Misc\DiscordSetup.exe" -s
+:: "C:\Windows\Misc\DiscordSetup.exe" -s
 
 @echo Creating Desktop Shortcut to Evolve App Installer...
 powershell -Command ^
