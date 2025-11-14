@@ -282,6 +282,9 @@ reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f >nul 2>&1
 reg delete "HKCU\Software\Microsoft\Internet Explorer\Toolbar\ShellBrowser" /v "ITBar7Layout" /f >nul 2>&1
 :: reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowStatusBar" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Software\OpenShell\ClassicExplorer\Settings" /v ShowStatusBar /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Software\OpenShell\ClassicExplorer" /v CSettingsDlg /t REG_BINARY /d 08060000db0100000000000000000000aa0f00000100d86d00000000 /f >nul 2>&1
+
 
 :: ====================================================================
 :: SECTION 3: POWERSHELL CONFIGURATION
