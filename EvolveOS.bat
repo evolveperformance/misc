@@ -1358,8 +1358,13 @@ reg add "HKCU\Software\Sysinternals\AutoRuns" /v VerifyCodeSignatures /t REG_DWO
 @echo Disable Windows Store Auto Download
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsStore" /v "AutoDownload" /t REG_DWORD /d "2" /f >nul 2>&1
 
-@echo Taskbar Widgets off
+@echo off
+echo Disable Widgets - set system policy first (requires admin rights)
+reg add "HKLM\Software\Policies\Microsoft\Dsh" /v "AllowNewsAndInterests" /t REG_DWORD /d 0 /f
+
+echo Disable Widgets toggle for current user
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 0 /f
+
 
 @echo Exclude Driver Updates in Quality Updates
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ExcludeWUDriversInQualityUpdate" /t REG_DWORD /d "1" /f >nul 2>&1
