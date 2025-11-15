@@ -95,9 +95,6 @@ del "%BG_IMAGE%" >nul 2>&1
 
 
 :skipwallpaper
-echo Downloading Discord EXE...
-curl.exe -L "https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x64" -o "C:\Windows\Misc\DiscordSetup.exe"
-
 echo Downloading latest Evolve configuration...
 set "Evolve_BAT=%TEMP%\EvolveOS_Online.bat"
 curl.exe -L "https://github.com/evolveperformance/misc/raw/main/EvolveOS.bat?v=%RANDOM%" -o "%Evolve_BAT%"

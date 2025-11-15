@@ -69,8 +69,6 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v
 :: ====================================================================
 
 @echo Installing Essential Tools...
-:: powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File "C:\Windows\Misc\PatchStartAllBack.ps1" >nul 2>&1
-:: reg import "C:\Windows\Misc\StartAllBack.reg" >nul 2>&1
 reg import "C:\Windows\Misc\RunAsTi.reg" >nul 2>&1
 
 @echo Install Icon to Path
@@ -86,7 +84,7 @@ powershell.exe -NoLogo -NoProfile -Command ^
   "$wshell  = New-Object -ComObject WScript.Shell;" ^
   "$shortcut = $wshell.CreateShortcut((Join-Path $startup 'SetTimerResolution.lnk'));" ^
   "$shortcut.TargetPath = 'C:\Windows\EvolveSetup\misc\SetTimerResolution.exe';" ^
-  "$shortcut.Arguments  = '--resolution 5070 --no-console';" ^
+  "$shortcut.Arguments  = '--resolution 5043 --no-console';" ^
   "$shortcut.WorkingDirectory = 'C:\Windows\EvolveSetup\misc';" ^
   "$shortcut.Save()"
 
@@ -247,18 +245,6 @@ echo  All installs + visuals attempted. Logs at:
 echo  %LOG%
 echo ============================================
 
-@echo Installing Windows Terminal...
-winget install --id Microsoft.WindowsTerminal --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
-
-@echo Installing Visual Studio Code...
-winget install --id Microsoft.VisualStudioCode --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /MERGETASKS=!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath" >nul 2>&1
-
-:: @echo Installing Discord...
-:: winget install --id Discord.Discord --silent --accept-source-agreements --accept-package-agreements >nul 2>&1
-
-@echo Install Discord
-:: "C:\Windows\Misc\DiscordSetup.exe" -s
-
 @echo Creating Desktop Shortcut to Evolve App Installer...
 powershell -Command ^
 "$shell = New-Object -ComObject WScript.Shell; ^
@@ -281,7 +267,6 @@ REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution 
 reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Toolbar" /v "{553891B7-A0D5-4526-BE18-D3CE461D6310}" /f >nul 2>&1
 reg delete "HKCU\Software\Microsoft\Internet Explorer\Toolbar\ShellBrowser" /v "ITBar7Layout" /f >nul 2>&1
-:: reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowStatusBar" /t REG_DWORD /d 0 /f >nul 2>&1
 reg add "HKCU\Software\OpenShell\ClassicExplorer\Settings" /v ShowStatusBar /t REG_DWORD /d 0 /f >nul 2>&1
 reg add "HKCU\Software\OpenShell\ClassicExplorer" /v CSettingsDlg /t REG_BINARY /d 08060000db0100000000000000000000aa0f00000100d86d00000000 /f >nul 2>&1
 
@@ -933,10 +918,6 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\BrokerInfrastructure\Parameters"
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\BrokerInfrastructure\Parameters" /v "EnergyBudgetInfiniteOnFg" /t REG_DWORD /d "1" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\BrokerInfrastructure\Parameters" /v "GlobalCoalesceMaxAdditionalTasksPerWake" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\BrokerInfrastructure\Parameters" /v "GlobalCoalesceMaxEarlyFireWindowMs" /t REG_DWORD /d "0" /f >nul 2>&1
-
-:: @echo Install Discord Fixer EXE
-:: curl.exe -L "https://github.com/HerXayah/Discord-Fixer/releases/download/Beta/DiscordFixer.exe" -o "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe" >nul 2>&1
-:: start "" "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe" >nul 2>&1
 
 @echo Disable Devices
 cd C:\Windows\Misc\DevManView >nul 2>&1
@@ -1954,9 +1935,6 @@ reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" ^
 :: BLANK.ICO
 copy "C:\Windows\EvolveSetup\Visuals\blank.ico" "C:\Windows" /Y >nul 
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 29 /t REG_SZ /d "C:\Windows\blank.ico" /f >nul 2>&1
-
-:: @echo Delete DiscordFixer
-:: del /q "C:\Users\Administrator\AppData\Local\Discord\DiscordFixer.exe"
 
 @echo.
 echo EvolveOS configuration complete!
